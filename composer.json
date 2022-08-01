@@ -31,10 +31,38 @@
             "title": "Web3",
             "category": "feature",
             "icon": {
-                "name": "fas fa-cubes",
-                "backgroundColor": "#EBF1FD",
-                "color": "#3a98d0"
+                "name": "fas fa-wallet",
+                "backgroundColor": "#b3047d",
+                "color": "#ffd8ff"
+            }
+        },
+        "flarum-cli": {
+            "modules": {
+                "backendTesting": true
             }
         }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Blomstra\\Web3\\Tests\\": "tests/"
+        }
+    },
+    "scripts": {
+        "test": [
+            "@test:unit",
+            "@test:integration"
+        ],
+        "test:unit": "phpunit -c tests/phpunit.unit.xml",
+        "test:integration": "phpunit -c tests/phpunit.integration.xml",
+        "test:setup": "@php tests/integration/setup.php"
+    },
+    "scripts-descriptions": {
+        "test": "Runs all tests.",
+        "test:unit": "Runs all unit tests.",
+        "test:integration": "Runs all integration tests.",
+        "test:setup": "Sets up a database for use with integration tests. Execute this only once."
+    },
+    "require-dev": {
+        "flarum/testing": "^1.0.0"
     }
 }
