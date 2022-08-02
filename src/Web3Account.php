@@ -19,6 +19,8 @@ class Web3Account extends AbstractModel
 {
     use ScopeVisibilityTrait;
 
+    public $timestamps = true;
+
     protected $table = 'web3_accounts';
 
     public static function create(User $actor, $get, $get1, $get2): self

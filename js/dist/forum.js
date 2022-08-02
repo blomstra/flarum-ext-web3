@@ -78,7 +78,19 @@ var ConnectWalletModal = /*#__PURE__*/function (_Modal) {
       className: flarum_common_utils_classList__WEBPACK_IMPORTED_MODULE_10___default()("Modal-body", {
         "Modal-body--loading": this.loading
       })
-    }, this.selectedWallet ? this.selectedWalletView() : this.walletKindItems().toArray());
+    }, m("div", {
+      className: "Form Form--centered"
+    }, this.selectedWallet ? this.selectedWalletView() : this.walletSelectionView()));
+  };
+
+  _proto.walletSelectionView = function walletSelectionView() {
+    return m('[', null, m("div", {
+      className: "Form-group"
+    }, this.walletKindItems().toArray()), m("div", {
+      className: "Form-group"
+    }, m((flarum_common_components_Button__WEBPACK_IMPORTED_MODULE_6___default()), {
+      className: "Button Button--primary Button--block"
+    }, flarum_forum_app__WEBPACK_IMPORTED_MODULE_3___default().translator.trans('blomstra-web3-wallets.forum.connect-wallet-modal.disconnect'))));
   };
 
   _proto.walletKindItems = function walletKindItems() {
@@ -156,7 +168,7 @@ var ConnectWalletModal = /*#__PURE__*/function (_Modal) {
     }
 
     return m('[', null, m((flarum_common_components_Button__WEBPACK_IMPORTED_MODULE_6___default()), {
-      className: "Button Button--text ConnectWalletModal-goback",
+      className: "Button Button--text Button--block ConnectWalletModal-goback",
       icon: "fas fa-arrow-left",
       onclick: this.listWallets.bind(this)
     }, flarum_forum_app__WEBPACK_IMPORTED_MODULE_3___default().translator.trans('blomstra-web3-wallets.forum.connect-wallet-modal.goback')), m("div", {
@@ -172,7 +184,7 @@ var ConnectWalletModal = /*#__PURE__*/function (_Modal) {
 
   _proto.accountView = function accountView(account, accountIndex) {
     return m((flarum_common_components_Button__WEBPACK_IMPORTED_MODULE_6___default()), {
-      className: "Button ConnectWalletModal-account",
+      className: "Button Button--block ConnectWalletModal-account",
       key: accountIndex,
       onclick: this.connectWallet.bind(this, account)
     }, m("div", {

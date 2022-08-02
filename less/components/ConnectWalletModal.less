@@ -1,8 +1,17 @@
 .ConnectWalletModal {
+  .Form {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+
+    .Button {
+      min-height: 50px;
+      height: auto;
+    }
+  }
+
   &-goback {
     border-bottom: 1px solid var(--control-bg-shaded);
-    margin-bottom: 16px;
-    padding-bottom: 16px;
     width: 100%;
   }
 
@@ -73,6 +82,7 @@
     &-address {
       overflow: hidden;
       text-overflow: ellipsis;
+      font-size: 0.8rem;
     }
 
     &-title {

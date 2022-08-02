@@ -29,8 +29,25 @@ export default class ConnectWalletModal extends Modal {
   content() {
     return (
       <div className={classList("Modal-body", { "Modal-body--loading": this.loading })}>
-        {this.selectedWallet ? this.selectedWalletView() : this.walletKindItems().toArray()}
+        <div className="Form Form--centered">
+          {this.selectedWallet ? this.selectedWalletView() : this.walletSelectionView()}
+        </div>
       </div>
+    );
+  }
+
+  walletSelectionView() {
+    return (
+      <>
+        <div className="Form-group">
+          {this.walletKindItems().toArray()}
+        </div>
+        <div className="Form-group">
+          <Button className="Button Button--primary Button--block">
+            {app.translator.trans('blomstra-web3-wallets.forum.connect-wallet-modal.disconnect')}
+          </Button>
+        </div>
+      </>
     );
   }
 
@@ -99,7 +116,7 @@ export default class ConnectWalletModal extends Modal {
 
     return (
       <>
-        <Button className="Button Button--text ConnectWalletModal-goback" icon="fas fa-arrow-left" onclick={this.listWallets.bind(this)}>
+        <Button className="Button Button--text Button--block ConnectWalletModal-goback" icon="fas fa-arrow-left" onclick={this.listWallets.bind(this)}>
           {app.translator.trans('blomstra-web3-wallets.forum.connect-wallet-modal.goback')}
         </Button>
         <div className="ConnectWalletModal-selectedWallet">
@@ -115,7 +132,7 @@ export default class ConnectWalletModal extends Modal {
 
   accountView(account: WalletAccount, accountIndex: number) {
     return (
-      <Button className="Button ConnectWalletModal-account" key={accountIndex} onclick={this.connectWallet.bind(this, account)}>
+      <Button className="Button Button--block ConnectWalletModal-account" key={accountIndex} onclick={this.connectWallet.bind(this, account)}>
         <div className="ConnectWalletModal-account-title">{account.name}</div>
         <div className="ConnectWalletModal-account-address">{account.address}</div>
       </Button>
