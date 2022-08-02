@@ -1,5 +1,5 @@
 {
-    "name": "blomstra/web3",
+    "name": "blomstra/web3-wallets",
     "description": "Web3 for Flarum",
     "keywords": [
         "flarum"
@@ -7,7 +7,11 @@
     "type": "flarum-extension",
     "license": "MIT",
     "require": {
-        "flarum/core": "^1.3.1"
+        "flarum/core": "^1.4.0",
+        "gmajor/sr25519-bindings": "dev-main#3e3f7f225796a51f2a18e28acb8c66541e905d53",
+        "ext-ffi": "*",
+        "ext-gmp": "*",
+        "tuupola/base58": "^2.1"
     },
     "homepage": "https://blomstra.net",
     "support": {
@@ -24,11 +28,12 @@
     "autoload": {
         "psr-4": {
             "Blomstra\\Web3\\": "src/"
-        }
+        },
+        "files": ["src/helpers.php"]
     },
     "extra": {
         "flarum-extension": {
-            "title": "Web3",
+            "title": "Web3 Login",
             "category": "feature",
             "icon": {
                 "name": "fas fa-wallet",
