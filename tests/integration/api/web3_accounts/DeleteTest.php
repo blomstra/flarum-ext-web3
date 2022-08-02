@@ -31,7 +31,7 @@ class DeleteTest extends TestCase
     public function user_can_disconnect_a_wallet_account()
     {
         $response = $this->send(
-            $this->request('/DELETE', '/api/web3/accounts/1', [
+            $this->request('DELETE', '/api/web3/accounts/1', [
                 'authenticatedAs' => 2,
             ])
         );
@@ -43,11 +43,11 @@ class DeleteTest extends TestCase
     public function user_cannot_disconnect_another_users_wallet_account()
     {
         $response = $this->send(
-            $this->request('/DELETE', '/api/web3/accounts/2', [
+            $this->request('DELETE', '/api/web3/accounts/2', [
                 'authenticatedAs' => 2,
             ])
         );
 
-        $this->assertEquals(401, $response->getStatusCode());
+        $this->assertEquals(403, $response->getStatusCode());
     }
 }

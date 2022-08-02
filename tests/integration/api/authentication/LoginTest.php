@@ -30,13 +30,15 @@ class LoginTest extends TestCase
     public function user_with_attached_address_can_login_by_signing_username_cyptographically()
     {
         $response = $this->send(
-            $this->request('POST', '/api/web3/login', [
-                'json' => [
-                    'identification' => $this->normalUser()['username'],
-                    'address' => 'some_address',
-                    'signature' => 'some_signature',
-                ]
-            ])
+            $this->requestWithCsrfToken(
+                $this->request('POST', '/api/web3/login', [
+                    'json' => [
+                        'identification' => $this->normalUser()['username'],
+                        'address' => 'some_address',
+                        'signature' => 'some_signature',
+                    ]
+                ])
+            )
         );
 
         $this->assertEquals(200, $response->getStatusCode());
@@ -56,13 +58,15 @@ class LoginTest extends TestCase
     public function user_with_attached_address_cant_login_by_fake_signing_username_cyptographically()
     {
         $response = $this->send(
-            $this->request('POST', '/api/web3/login', [
-                'json' => [
-                    'identification' => $this->normalUser()['username'],
-                    'address' => 'some_address',
-                    'signature' => 'some_signature',
-                ]
-            ])
+            $this->requestWithCsrfToken(
+                $this->request('POST', '/api/web3/login', [
+                    'json' => [
+                        'identification' => $this->normalUser()['username'],
+                        'address' => 'some_address',
+                        'signature' => 'some_signature',
+                    ]
+                ])
+            )
         );
 
         // HTTP 401 signals an authentication problem

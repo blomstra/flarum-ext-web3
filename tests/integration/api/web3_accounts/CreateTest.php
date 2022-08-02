@@ -28,7 +28,7 @@ class CreateTest extends TestCase
     public function user_can_attach_a_web3_account_through_a_wallet()
     {
         $response = $this->send(
-            $this->request('/POST', '/api/web3/accounts', [
+            $this->request('POST', '/api/web3/accounts', [
                 'authenticatedAs' => 2,
                 'json' => [
                     'data' => [
@@ -45,7 +45,7 @@ class CreateTest extends TestCase
             ])
         );
 
-        $this->assertEquals(200, $response->getStatusCode());
+        $this->assertEquals(201, $response->getStatusCode());
         $this->assertTrue(
             Web3Account::query()
                 ->where('user_id', 2)
@@ -60,7 +60,7 @@ class CreateTest extends TestCase
     {
         foreach (['polkadot', 'ethereum'] as $source) {
             $response = $this->send(
-                $this->request('/POST', '/api/web3/accounts', [
+                $this->request('POST', '/api/web3/accounts', [
                     'authenticatedAs' => 2,
                     'json' => [
                         'data' => [
@@ -77,7 +77,7 @@ class CreateTest extends TestCase
                 ])
             );
 
-            $this->assertEquals(200, $response->getStatusCode());
+            $this->assertEquals(201, $response->getStatusCode());
             $this->assertTrue(
                 Web3Account::query()
                     ->where('user_id', 2)
@@ -92,7 +92,7 @@ class CreateTest extends TestCase
     public function user_cannot_attach_a_web3_account_with_falsified_signature()
     {
         $response = $this->send(
-            $this->request('/POST', '/api/web3/accounts', [
+            $this->request('POST', '/api/web3/accounts', [
                 'authenticatedAs' => 2,
                 'json' => [
                     'data' => [
@@ -109,7 +109,7 @@ class CreateTest extends TestCase
             ])
         );
 
-        $this->assertEquals(200, $response->getStatusCode());
+        $this->assertEquals(201, $response->getStatusCode());
         $this->assertFalse(
             Web3Account::query()
                 ->where('user_id', 2)
