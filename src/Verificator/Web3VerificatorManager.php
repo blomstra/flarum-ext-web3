@@ -11,6 +11,7 @@ class Web3VerificatorManager
      */
     public static $verificators = [
         'sr25519' => PolkadotSignatureVerificator::class,
+        'eth' => EthereumSignatureVerficator::class,
     ];
 
     public function get(string $type): SignedMessageVerificator

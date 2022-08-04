@@ -11,7 +11,8 @@
         "gmajor/sr25519-bindings": "dev-main#3e3f7f225796a51f2a18e28acb8c66541e905d53",
         "ext-ffi": "*",
         "ext-gmp": "*",
-        "tuupola/base58": "^2.1"
+        "tuupola/base58": "^2.1",
+        "sijad/laravel-ecrecover": "^0.0.5"
     },
     "homepage": "https://blomstra.net",
     "support": {

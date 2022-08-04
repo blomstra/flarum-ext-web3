@@ -24,22 +24,21 @@ class CreateTest extends TestCase
         ]);
     }
 
-    /** @test */
-    public function user_can_attach_a_web3_account_through_a_wallet()
+    /**
+     * @dataProvider canAttachAddressData
+     * @test
+     */
+    public function user_can_attach_a_web3_account_through_a_wallet(string $address, string $source, string $type, string $signature)
     {
         $response = $this->send(
             $this->request('POST', '/api/web3/accounts', [
                 'authenticatedAs' => 2,
                 'json' => [
                     'data' => [
-                        'attributes' => [
-                            'address' => 'some_random_web3_address',
-                            'source' => 'polkadot',
-                            'type' => 'sr25519',
-                        ],
+                        'attributes' => compact('address', 'source', 'type'),
                     ],
                     'meta' => [
-                        'signature' => 'some_signature',
+                        'signature' => $signature,
                     ],
                 ]
             ])
@@ -55,66 +54,50 @@ class CreateTest extends TestCase
         );
     }
 
-    /** @test */
-    public function user_can_attach_a_web3_account_through_different_wallets()
-    {
-        foreach (['polkadot', 'ethereum'] as $source) {
-            $response = $this->send(
-                $this->request('POST', '/api/web3/accounts', [
-                    'authenticatedAs' => 2,
-                    'json' => [
-                        'data' => [
-                            'attributes' => [
-                                'address' => 'some_random_web3_address',
-                                'source' => $source,
-                                'type' => 'sr25519',
-                            ],
-                        ],
-                        'meta' => [
-                            'signature' => 'some_signature',
-                        ],
-                    ]
-                ])
-            );
-
-            $this->assertEquals(201, $response->getStatusCode());
-            $this->assertTrue(
-                Web3Account::query()
-                    ->where('user_id', 2)
-                    ->where('address', 'some_random_web3_address')
-                    ->where('source', $source)
-                    ->exists()
-            );
-        }
-    }
-
-    /** @test */
-    public function user_cannot_attach_a_web3_account_with_falsified_signature()
+    /**
+     * @dataProvider cannotAttachAddressData
+     * @test
+     */
+    public function user_cannot_attach_a_web3_account_with_false_data(string $address, string $source, string $type, string $signature)
     {
         $response = $this->send(
             $this->request('POST', '/api/web3/accounts', [
                 'authenticatedAs' => 2,
                 'json' => [
                     'data' => [
-                        'attributes' => [
-                            'address' => 'some_random_web3_address',
-                            'source' => 'polkadot',
-                            'type' => 'sr25519',
-                        ],
+                        'attributes' => compact('address', 'source', 'type'),
                     ],
                     'meta' => [
-                        'signature' => 'some_fake_signature',
+                        'signature' => $signature,
                     ],
                 ]
             ])
         );
 
-        $this->assertEquals(201, $response->getStatusCode());
+        $this->assertEquals(403, $response->getStatusCode());
         $this->assertFalse(
             Web3Account::query()
                 ->where('user_id', 2)
                 ->where('address', 'some_random_web3_address')
                 ->exists()
         );
+    }
+
+    public function canAttachAddressData()
+    {
+        // @TODO use real data
+        return [
+            ['some_random_web3_address', 'polkadot', 'sr25519', 'some_signature'],
+            ['some_random_web3_address', 'ethereum', 'eth', 'some_signature'],
+        ];
+    }
+
+    public function cannotAttachAddressData()
+    {
+        // @TODO use real data
+        return [
+            ['some_random_web3_address', 'polkadot', 'sr25519', 'some_wrong_signature'],
+            ['some_random_web3_address', 'ethereum', 'eth', 'some_wrong_signature'],
+        ];
     }
 }
