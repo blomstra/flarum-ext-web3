@@ -1,15 +1,4 @@
 .ConnectWalletModal {
-  .Form {
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-
-    .Button {
-      min-height: 50px;
-      height: auto;
-    }
-  }
-
   &-goback {
     border-bottom: 1px solid var(--control-bg-shaded);
     width: 100%;
@@ -17,9 +6,6 @@
 
   &-walletKind {
     --gap: 8px;
-    background-color: var(--body-bg);
-    padding: 12px;
-    border-radius: var(--border-radius);
     display: flex;
     flex-direction: column;
     gap: var(--gap);
@@ -38,8 +24,7 @@
   &-wallet {
     padding: 12px 16px;
     font-size: 1.1rem;
-    border-radius: var(--border-radius);
-    background-color: var(--control-bg);
+    .Button--color-auto('button-inverted');
 
     &, .Button-label {
       display: flex;
@@ -77,7 +62,9 @@
 
   &-account {
     padding: 12px;
-    .Button--color-auto('button-inverted');
+    background-color: var(--body-bg);
+    display: flex;
+    align-items: center;
 
     &-address {
       overflow: hidden;
@@ -89,6 +76,10 @@
       font-weight: bold;
       font-size: 1rem;
     }
+
+    &-actions {
+      margin-left: auto;
+    }
   }
 
   .Modal-body--loading::before {
@@ -97,5 +88,16 @@
     position: absolute;
     background-color: var(--control-bg);
     opacity: 0.65;
+  }
+
+  // Core issues
+  .Form {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+  }
+
+  .Button--primary .Button-icon {
+    display: inline-block;
   }
 }

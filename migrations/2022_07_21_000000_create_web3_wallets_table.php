@@ -12,7 +12,8 @@ return Migration::createTable(
         $table->string('address');
         $table->string('source');
         $table->string('type');
-        $table->timestamps();
+        $table->timestamp('attached_at')->nullable();
+        $table->timestamp('last_verified_at')->nullable();
 
         $table->unique(['address', 'source']);
     }

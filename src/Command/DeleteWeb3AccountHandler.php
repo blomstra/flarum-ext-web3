@@ -29,10 +29,6 @@ class DeleteWeb3AccountHandler
 
         $actor->assertCan('disconnect', $account);
 
-        if ($account->id === $actor->selected_wallet_id) {
-            $actor->update(['selected_wallet_id' => null]);
-        }
-
         $account->delete();
 
         return $account;

@@ -65,7 +65,6 @@ class CreateWeb3AccountHandler
         // Signed Message verified so we can save.
         $account->save();
 
-        $actor->selected_wallet_id = $account->id;
         $actor->save();
 
         return $account;

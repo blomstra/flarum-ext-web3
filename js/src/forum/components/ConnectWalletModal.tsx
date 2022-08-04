@@ -1,5 +1,5 @@
 import app from 'flarum/forum/app';
-import Modal from 'flarum/common/components/Modal';
+import Modal, {IInternalModalAttrs} from 'flarum/common/components/Modal';
 import ItemList from "flarum/common/utils/ItemList";
 import type Mithril from "mithril";
 import {Wallet, WalletAccount, WalletKind} from "../../shims";
@@ -11,12 +11,21 @@ import LoadingIndicator from "flarum/common/components/LoadingIndicator";
 import Web3Account from "../models/Web3Account";
 import classList from "flarum/common/utils/classList";
 import {stringToHex} from "@polkadot/util";
+import Tooltip from "flarum/common/components/Tooltip";
 
+export interface IConnectWalletModalAttrs extends IInternalModalAttrs {}
 
-export default class ConnectWalletModal extends Modal {
+export default class ConnectWalletModal<CustomAttrs extends IConnectWalletModalAttrs = IConnectWalletModalAttrs> extends Modal<CustomAttrs> {
   private selectedWallet: Wallet|null = null;
   private accounts: WalletAccount[]|null = null;
+  private attachedAccountsLoaded = false;
   protected loading: boolean = false;
+
+  oninit(vnode: Mithril.Vnode<CustomAttrs, this>) {
+    super.oninit(vnode);
+
+    this.loadAttachedAccounts();
+  }
 
   className() {
     return 'ConnectWalletModal';
@@ -29,7 +38,7 @@ export default class ConnectWalletModal extends Modal {
   content() {
     return (
       <div className={classList("Modal-body", { "Modal-body--loading": this.loading })}>
-        <div className="Form Form--centered">
+        <div className="Form">
           {this.selectedWallet ? this.selectedWalletView() : this.walletSelectionView()}
         </div>
       </div>
@@ -42,7 +51,7 @@ export default class ConnectWalletModal extends Modal {
         <div className="Form-group">
           {this.walletKindItems().toArray()}
         </div>
-        <div className="Form-group">
+        <div className="Form-group Form--centered">
           <Button className="Button Button--primary Button--block">
             {app.translator.trans('blomstra-web3-wallets.forum.connect-wallet-modal.disconnect')}
           </Button>
@@ -114,6 +123,10 @@ export default class ConnectWalletModal extends Modal {
       return <LoadingIndicator/>;
     }
 
+    if (!this.attachedAccountsLoaded) {
+      return <LoadingIndicator/>;
+    }
+
     return (
       <>
         <Button className="Button Button--text Button--block ConnectWalletModal-goback" icon="fas fa-arrow-left" onclick={this.listWallets.bind(this)}>
@@ -131,11 +144,29 @@ export default class ConnectWalletModal extends Modal {
   }
 
   accountView(account: WalletAccount, accountIndex: number) {
+    const attachedAccount = app.store.getBy<Web3Account>('web3-accounts', 'address', account.address);
+    const isAttached = !!attachedAccount;
+
     return (
-      <Button className="Button Button--block ConnectWalletModal-account" key={accountIndex} onclick={this.connectWallet.bind(this, account)}>
-        <div className="ConnectWalletModal-account-title">{account.name}</div>
-        <div className="ConnectWalletModal-account-address">{account.address}</div>
-      </Button>
+      <div
+        key={accountIndex}
+        className={classList('ConnectWalletModal-account', {
+          'ConnectWalletModal-account--attached': isAttached,
+          'ConnectWalletModal-account--unattached': !isAttached,
+        })}>
+        <div className="ConnectWalletModal-account-info">
+          <div className="ConnectWalletModal-account-title">{account.name}</div>
+          <div className="ConnectWalletModal-account-address">{account.address}</div>
+        </div>
+        <div className="ConnectWalletModal-account-actions">
+          <Tooltip text={app.translator.trans(`blomstra-web3-wallets.forum.connect-wallet-modal.${isAttached ? 'unattach' : 'attach'}_address`)}>
+            <Button
+              className={classList("Button Button--icon", { 'Button--primary': !isAttached, 'Button--danger': isAttached })}
+              icon={isAttached ? 'fas fa-unlink' : 'fas fa-plus'}
+              onclick={!isAttached ? this.connectAccount.bind(this, account) : this.disconnectAccount.bind(this, account)} />
+          </Tooltip>
+        </div>
+      </div>
     );
   }
 
@@ -149,7 +180,7 @@ export default class ConnectWalletModal extends Modal {
     this.selectedWallet = null;
   }
 
-  async connectWallet(account: WalletAccount) {
+  async connectAccount(account: WalletAccount) {
     const wallet = account.wallet!;
 
     if (!this.loading) {
@@ -190,5 +221,18 @@ export default class ConnectWalletModal extends Modal {
       this.loading = false;
       m.redraw();
     }
+  }
+
+  async disconnectAccount(account: WalletAccount) {
+    await app.store.getBy<Web3Account>('web3-accounts', 'address', account.address)?.delete();
+    m.redraw();
+  }
+
+  loadAttachedAccounts() {
+    return app.store
+      .find<Web3Account[]>('web3/accounts')
+      .then((accounts) => {
+        this.attachedAccountsLoaded = true;
+      });
   }
 }

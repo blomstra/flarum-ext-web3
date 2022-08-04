@@ -19,6 +19,9 @@ class Web3Account extends AbstractModel
 {
     use ScopeVisibilityTrait;
 
+    const CREATED_AT = 'attached_at';
+    const UPDATED_AT = 'last_verified_at';
+
     public $timestamps = true;
 
     protected $table = 'web3_accounts';

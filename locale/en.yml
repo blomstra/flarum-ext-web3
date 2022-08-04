@@ -1,10 +1,12 @@
 blomstra-web3-wallets:
   forum:
     connect-wallet-modal:
+      attach_address: Attach address
       could-not-sign: Could not sign username cryptographically on selected account.
       disconnect: Disconnect
       goback: Back to wallet selection
       signature-invalid: The signature is invalid.
       title: Connect Wallet
+      unattach_address: Unattach address
     header:
       wallet-connect-label: Connect Wallet
