@@ -2,7 +2,7 @@
 
 ![License](https://img.shields.io/badge/license-MIT-blue.svg) [![Latest Stable Version](https://img.shields.io/packagist/v/blomstra/web3-wallets.svg)](https://packagist.org/packages/blomstra/web3-wallets) [![Total Downloads](https://img.shields.io/packagist/dt/blomstra/web3-wallets.svg)](https://packagist.org/packages/blomstra/web3-wallets)
 
-A [Flarum](http://flarum.org) extension. Web3 for Flarum
+A [Flarum](http://flarum.org) extension. Web3 EVM & Rust Wallet connection for Flarum.
 
 ## Installation
 
