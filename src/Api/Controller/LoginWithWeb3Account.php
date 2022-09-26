@@ -2,14 +2,16 @@
 
 namespace Blomstra\Web3\Api\Controller;
 
-use Blomstra\Web3\Verificator\Web3VerificatorManager;
+use Blomstra\Web3\Verifier\VerificationManager;
 use Blomstra\Web3\Web3AccountRepository;
 use Blomstra\Web3\Web3LoginValidator;
 use Flarum\Http\RememberAccessToken;
 use Flarum\Http\SessionAccessToken;
 use Flarum\User\Exception\NotAuthenticatedException;
 use Flarum\User\UserRepository;
+use Illuminate\Contracts\Container\BindingResolutionException;
 use Illuminate\Support\Arr;
+use Illuminate\Validation\ValidationException;
 use Laminas\Diactoros\Response\JsonResponse;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -17,57 +19,47 @@ use Psr\Http\Server\RequestHandlerInterface;
 
 class LoginWithWeb3Account implements RequestHandlerInterface
 {
-    /**
-     * @var Web3LoginValidator
-     */
-    protected $validator;
-
-    /**
-     * @var Web3AccountRepository
-     */
-    protected $repository;
-
-    /**
-     * @var Web3VerificatorManager
-     */
-    protected $verificators;
-
-    /**
-     * @var UserRepository
-     */
-    protected $users;
-
     public function __construct(
-        Web3LoginValidator $validator,
-        Web3AccountRepository $repository,
-        Web3VerificatorManager $verificators,
-        UserRepository $users)
-    {
-        $this->validator = $validator;
-        $this->repository = $repository;
-        $this->verificators = $verificators;
-        $this->users = $users;
-    }
+        protected Web3LoginValidator    $validator,
+        protected Web3AccountRepository $repository,
+        protected VerificationManager   $verifiers,
+        protected UserRepository        $users
+    ) {}
 
+    /**
+     * @throws NotAuthenticatedException
+     * @throws BindingResolutionException
+     * @throws ValidationException
+     * @throws \Flarum\Foundation\ValidationException
+     */
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
         $body = $request->getParsedBody();
 
-        $username = Arr::get($body, 'identification');
+        $identification = Arr::get($body, 'identification');
         $address = Arr::get($body, 'address');
         $signature = Arr::get($body, 'signature');
 
-        $this->validator->assertValid(compact('username', 'address', 'signature'));
+        $this->validator->assertValid(compact('identification', 'address', 'signature'));
 
-        // Check that the (address, source) pair exists.
-        $account = $this->repository->findOrFail($address);
+        // Check that the address exists.
+        $account = $this->repository->find($address);
 
-        // Check that the signature is valid.
-        if (! $this->verificators->get($account->type)->verifySignature($username, $signature, $address)) {
+        if (! $account) {
             throw new NotAuthenticatedException();
         }
 
-        $user = $this->users->findOrFailByUsername($username);
+        $user = $this->users->findByIdentification($identification);
+
+        // Make sure the address is actually tied to the user.
+        if (! $user || $user->id !== $account->user_id) {
+            throw new NotAuthenticatedException();
+        }
+
+        // Check that the signature is valid.
+        if (! $this->verifiers->get($account->type)->verify($signature, $identification, $address)) {
+            throw new NotAuthenticatedException();
+        }
 
         // Create and return the access token.
         if (Arr::get($body, 'remember')) {
@@ -79,8 +71,8 @@ class LoginWithWeb3Account implements RequestHandlerInterface
         $token->touch($request);
 
         return new JsonResponse([
+            'token' => $token->token,
             'userId' => $user->id,
-            'token' => $token->toJson(),
         ]);
     }
 }

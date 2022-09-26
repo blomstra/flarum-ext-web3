@@ -16,10 +16,10 @@ class Web3AccountRepository
         return Web3Account::query();
     }
 
-    public function findOrFail(string $address): Web3Account
+    public function find(string $address): ?Web3Account
     {
         return $this->query()
             ->where('address', $address)
-            ->firstOrFail();
+            ->first();
     }
 }

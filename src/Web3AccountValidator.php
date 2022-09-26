@@ -2,16 +2,17 @@
 
 namespace Blomstra\Web3;
 
+use Closure;
 use Flarum\Foundation\AbstractValidator;
 
 class Web3AccountValidator extends AbstractValidator
 {
-    /**
-     * {@inheritdoc}
-     */
-    protected $rules = [
-        'address' => 'required|string|max:255',
-        'source' => 'required|string|max:255',
-        'type' => 'sometimes|string|max:255',
-    ];
+    protected function getRules()
+    {
+        return [
+            'address' => ['required', 'string', 'max:255', Closure::fromCallable([Web3AccountValidator::class, 'validateHexString'])],
+            'source' => 'required|string|max:255',
+            'type' => 'sometimes|string|max:255',
+        ];
+    }
 }

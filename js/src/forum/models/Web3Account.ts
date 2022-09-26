@@ -1,6 +1,12 @@
 import Model from 'flarum/common/Model';
+import { encodeAddress } from "@polkadot/util-crypto";
 
 export default class Web3Account extends Model {
+  get encodedAddress() {
+    return encodeAddress(this.address());
+  }
+
+  /** Hex String **/
   address() {
     return Model.attribute<string>('address').call(this);
   }
@@ -10,7 +16,7 @@ export default class Web3Account extends Model {
   }
 
   type() {
-    return Model.attribute<string>('type').call(this);
+    return Model.attribute<'sr25519' | 'eth'>('type').call(this);
   }
 
   protected apiEndpoint(): string {

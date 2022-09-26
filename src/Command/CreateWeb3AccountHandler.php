@@ -2,35 +2,25 @@
 
 namespace Blomstra\Web3\Command;
 
-use Blomstra\Web3\Verificator\PolkadotSignatureVerificator;
-use Blomstra\Web3\Verificator\SignedMessageVerificator;
-use Blomstra\Web3\Verificator\Web3VerificatorManager;
+use Blomstra\Web3\Verifier\VerificationManager;
 use Blomstra\Web3\Web3Account;
 use Flarum\Foundation\ValidationException;
+use Illuminate\Contracts\Translation\Translator;
 use Illuminate\Support\Arr;
 use Blomstra\Web3\Web3AccountValidator;
-use Tuupola\Base58;
 
 class CreateWeb3AccountHandler
 {
-    /**
-     * @var Web3AccountValidator
-     */
-    protected $validator;
-
-    /**
-     * @var Web3VerificatorManager
-     */
-    protected $verificators;
-
-    public function __construct(Web3AccountValidator $validator, Web3VerificatorManager $verificators)
-    {
-        $this->validator = $validator;
-        $this->verificators = $verificators;
-    }
+    public function __construct(
+        protected Web3AccountValidator $validator,
+        protected VerificationManager $verifiers,
+        protected Translator $translator
+    )
+    {}
 
     /**
      * @throws ValidationException|\Illuminate\Validation\ValidationException
+     * @throws \Illuminate\Contracts\Container\BindingResolutionException
      */
     public function handle(CreateWeb3Account $command): Web3Account
     {
@@ -51,20 +41,19 @@ class CreateWeb3AccountHandler
             throw new ValidationException(['No signature provided. You must sign your username cryptographically.']);
         }
 
-        // @TODO: figure out backend verification.
-        // Address to public key
-        // $publicKey = (new Base58(['characters' => Base58::BITCOIN]))->decode($account->address);
-        // $verficator = $this->verificators->get($account->type);
         // Verify that the user does in fact own the account.
-        // if (! $verficator->verifySignature($actor->username, $signature, $publicKey)) {
-        //     throw new ValidationException([
-        //         'signature' => $this->translator->trans('blomstra-web3-wallets.forum.connect-wallet-modal.signature-invalid'),
-        //     ]);
-        // }
+        $isValid = $this->verifiers
+            ->get($account->type)
+            ->verify($signature, $actor->username, $account->address);
+
+        if (! $isValid) {
+            throw new ValidationException([
+                'signature' => $this->translator->trans('blomstra-web3-wallets.forum.connect-wallet-modal.signature-invalid'),
+            ]);
+        }
 
         // Signed Message verified so we can save.
         $account->save();
-
         $actor->save();
 
         return $account;

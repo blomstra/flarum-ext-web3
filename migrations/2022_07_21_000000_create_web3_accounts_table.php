@@ -9,13 +9,11 @@ return Migration::createTable(
     function (Blueprint $table) {
         $table->increments('id');
         $table->foreignIdFor(User::class);
-        $table->string('address');
+        $table->string('address', 80)->unique();
         $table->string('source');
         $table->string('type');
         $table->timestamp('attached_at')->nullable();
         $table->timestamp('last_verified_at')->nullable();
-
-        $table->unique(['address', 'source']);
     }
 );
 

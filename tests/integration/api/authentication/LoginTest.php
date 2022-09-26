@@ -2,6 +2,7 @@
 
 namespace Blomstra\Web3\Tests\integration\api\authentication;
 
+use Blomstra\Web3\C\SchnorrSignaturesBindings;
 use Flarum\Http\AccessToken;
 use Flarum\Testing\integration\RetrievesAuthorizedUsers;
 use Flarum\Testing\integration\TestCase;
@@ -16,12 +17,14 @@ class LoginTest extends TestCase
 
         $this->extension('blomstra-web3-wallets');
 
+        $pair = (new SchnorrSignaturesBindings())->pairFromSeed('fac7959dbfe72f052e5a0c3c8d6530f202b02fd8f9f5ca3580ec8deb7797479e');
+
         $this->prepareDatabase([
             'users' => [
                 $this->normalUser(),
             ],
             'web3_accounts' => [
-                ['id' => 1, 'user_id' => 2, 'address' => 'some_address', 'source' => 'polkadot', 'type' => 'sr25519'],
+                ['id' => 1, 'user_id' => 2, 'address' => '0x'.$pair[1], 'source' => 'polkadot-js', 'type' => 'sr25519'],
             ]
         ]);
     }
@@ -29,13 +32,17 @@ class LoginTest extends TestCase
     /** @test */
     public function user_with_attached_address_can_login_by_signing_username_cyptographically()
     {
+        $sr = new SchnorrSignaturesBindings();
+        $pair = $sr->pairFromSeed('fac7959dbfe72f052e5a0c3c8d6530f202b02fd8f9f5ca3580ec8deb7797479e');
+        $signature = $sr->sign($pair[1], $pair[0], "<Bytes>{$this->normalUser()['username']}</Bytes>");
+
         $response = $this->send(
             $this->requestWithCsrfToken(
                 $this->request('POST', '/api/web3/login', [
                     'json' => [
                         'identification' => $this->normalUser()['username'],
-                        'address' => 'some_address',
-                        'signature' => 'some_signature',
+                        'address' => '0x'.$pair[1],
+                        'signature' => '0x'.$signature,
                     ]
                 ])
             )
@@ -62,8 +69,8 @@ class LoginTest extends TestCase
                 $this->request('POST', '/api/web3/login', [
                     'json' => [
                         'identification' => $this->normalUser()['username'],
-                        'address' => 'some_address',
-                        'signature' => 'some_signature',
+                        'address' => '0x0000000000000000',
+                        'signature' => '0x0000000000000000',
                     ]
                 ])
             )

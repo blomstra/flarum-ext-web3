@@ -39,4 +39,7 @@ return [
 
     (new Extend\ModelVisibility(Web3Account::class))
         ->scope(Access\ScopeAccountVisiblity::class),
+
+    (new Extend\ServiceProvider())
+        ->register(Web3ServiceProvider::class),
 ];

@@ -10,8 +10,9 @@ import {ComponentAttrs} from "flarum/common/Component";
 import LoadingIndicator from "flarum/common/components/LoadingIndicator";
 import Web3Account from "../models/Web3Account";
 import classList from "flarum/common/utils/classList";
-import {stringToHex} from "@polkadot/util";
+import {stringToHex, u8aToHex} from "@polkadot/util";
 import Tooltip from "flarum/common/components/Tooltip";
+import {decodeAddress} from "@polkadot/util-crypto";
 
 export interface IConnectWalletModalAttrs extends IInternalModalAttrs {}
 
@@ -46,18 +47,7 @@ export default class ConnectWalletModal<CustomAttrs extends IConnectWalletModalA
   }
 
   walletSelectionView() {
-    return (
-      <>
-        <div className="Form-group">
-          {this.walletKindItems().toArray()}
-        </div>
-        <div className="Form-group Form--centered">
-          <Button className="Button Button--primary Button--block">
-            {app.translator.trans('blomstra-web3-wallets.forum.connect-wallet-modal.disconnect')}
-          </Button>
-        </div>
-      </>
-    );
+    return this.walletKindItems().toArray();
   }
 
   walletKindItems() {
@@ -68,7 +58,12 @@ export default class ConnectWalletModal<CustomAttrs extends IConnectWalletModalA
 
       if (! walletKind.wallets.length) return;
 
-      items.add(key, this.walletKindView(walletKind, index));
+      items.add(
+        key,
+        <div className="Form-group">
+          {this.walletKindView(walletKind, index)}
+        </div>
+      );
     });
 
     return items;
@@ -115,7 +110,11 @@ export default class ConnectWalletModal<CustomAttrs extends IConnectWalletModalA
 
   selectedWalletView() {
     if (this.accounts === null) {
-      this.selectedWallet!.getAccounts().then((accs) => {
+      let accounts;
+
+      accounts = this.selectedWallet!.getAccounts();
+
+      accounts.then((accs) => {
         this.accounts = accs || [];
         m.redraw();
       });
@@ -129,9 +128,11 @@ export default class ConnectWalletModal<CustomAttrs extends IConnectWalletModalA
 
     return (
       <>
-        <Button className="Button Button--text Button--block ConnectWalletModal-goback" icon="fas fa-arrow-left" onclick={this.listWallets.bind(this)}>
-          {app.translator.trans('blomstra-web3-wallets.forum.connect-wallet-modal.goback')}
-        </Button>
+        <div className="Form--centered">
+          <Button className="Button Button--text Button--block ConnectWalletModal-goback" icon="fas fa-arrow-left" onclick={this.listWallets.bind(this)}>
+            {app.translator.trans('blomstra-web3-wallets.forum.connect-wallet-modal.goback')}
+          </Button>
+        </div>
         <div className="ConnectWalletModal-selectedWallet">
           <div className="ConnectWalletModal-selectedWallet-title">{this.selectedWallet!.title}</div>
           <div className="ConnectWalletModal-selectedWallet-list">
@@ -144,7 +145,7 @@ export default class ConnectWalletModal<CustomAttrs extends IConnectWalletModalA
   }
 
   accountView(account: WalletAccount, accountIndex: number) {
-    const attachedAccount = app.store.getBy<Web3Account>('web3-accounts', 'address', account.address);
+    const attachedAccount = app.store.getBy<Web3Account>('web3-accounts', 'address', u8aToHex(decodeAddress(account.address)));
     const isAttached = !!attachedAccount;
 
     return (
@@ -205,7 +206,7 @@ export default class ConnectWalletModal<CustomAttrs extends IConnectWalletModalA
         const savedAccount = await app.store
           .createRecord<Web3Account>('web3-accounts')
           .save({
-            address: account.address,
+            address: u8aToHex(decodeAddress(account.address)),
             source: account.source,
             // @ts-ignore
             type: account.type || '',
@@ -224,7 +225,7 @@ export default class ConnectWalletModal<CustomAttrs extends IConnectWalletModalA
   }
 
   async disconnectAccount(account: WalletAccount) {
-    await app.store.getBy<Web3Account>('web3-accounts', 'address', account.address)?.delete();
+    await app.store.getBy<Web3Account>('web3-accounts', 'address', u8aToHex(decodeAddress(account.address)))?.delete();
     m.redraw();
   }
 

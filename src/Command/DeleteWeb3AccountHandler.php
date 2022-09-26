@@ -7,15 +7,9 @@ use Blomstra\Web3\Web3AccountRepository;
 
 class DeleteWeb3AccountHandler
 {
-    /**
-     * @var Web3AccountRepository
-     */
-    protected $repository;
-
-    public function __construct(Web3AccountRepository $repository)
-    {
-        $this->repository = $repository;
-    }
+    public function __construct(
+        protected Web3AccountRepository $repository
+    ) {}
 
     /**
      * @throws \Flarum\User\Exception\PermissionDeniedException

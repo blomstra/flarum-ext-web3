@@ -21,7 +21,7 @@ app.initializers.add('blomstra/web3-wallets', () => {
     ethereum: {
       key: 'ethereum',
       title: 'Ethereum',
-      wallets: []
+      wallets: getEvmWallets()
     },
   };
 
