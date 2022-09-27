@@ -6,7 +6,6 @@ use Blomstra\Web3\Verifier\VerificationManager;
 use Blomstra\Web3\Web3AccountRepository;
 use Blomstra\Web3\Web3LoginValidator;
 use Flarum\Http\RememberAccessToken;
-use Flarum\Http\SessionAccessToken;
 use Flarum\User\Exception\NotAuthenticatedException;
 use Flarum\User\UserRepository;
 use Illuminate\Contracts\Container\BindingResolutionException;
@@ -62,11 +61,7 @@ class LoginWithWeb3Account implements RequestHandlerInterface
         }
 
         // Create and return the access token.
-        if (Arr::get($body, 'remember')) {
-            $token = RememberAccessToken::generate($user->id);
-        } else {
-            $token = SessionAccessToken::generate($user->id);
-        }
+        $token = RememberAccessToken::generate($user->id);
 
         $token->touch($request);
 

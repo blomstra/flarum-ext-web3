@@ -10,7 +10,7 @@ class Web3AccountValidator extends AbstractValidator
     protected function getRules()
     {
         return [
-            'address' => ['required', 'string', 'max:255', Closure::fromCallable([Web3AccountValidator::class, 'validateHexString'])],
+            'address' => ['required', 'string', 'max:255', Closure::fromCallable([Web3LoginValidator::class, 'validateHexString'])],
             'source' => 'required|string|max:255',
             'type' => 'sometimes|string|max:255',
         ];
