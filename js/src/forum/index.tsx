@@ -59,6 +59,4 @@ app.initializers.add('blomstra/web3-wallets', () => {
       </LogInButton>
     );
   });
-
-  // Changes signup modal to only
 });
