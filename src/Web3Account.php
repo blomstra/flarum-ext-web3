@@ -2,6 +2,7 @@
 
 namespace Blomstra\Web3;
 
+use Carbon\Carbon;
 use Flarum\Database\AbstractModel;
 use Flarum\Database\ScopeVisibilityTrait;
 use Flarum\User\User;
@@ -12,6 +13,8 @@ use Flarum\User\User;
  * @property string $source
  * @property string $type
  * @property int $user_id
+ * @property Carbon $attached_at
+ * @property Carbon $last_verified_at
  *
  * @property-read User $user
  */

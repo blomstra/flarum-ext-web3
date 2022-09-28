@@ -37,9 +37,6 @@ return [
     (new Extend\Routes('forum'))
         ->post('/web3/login', 'web3-accounts.login', Forum\Controller\LoginWithWeb3Account::class),
 
-    (new Extend\Filter(Web3AccountFilterer::class))
-        ->addFilter(Query\SourceFilter::class),
-
     (new Extend\ModelVisibility(Web3Account::class))
         ->scope(Access\ScopeAccountVisiblity::class),
 

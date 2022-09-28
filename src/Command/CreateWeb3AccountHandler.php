@@ -4,6 +4,7 @@ namespace Blomstra\Web3\Command;
 
 use Blomstra\Web3\Verifier\VerificationManager;
 use Blomstra\Web3\Web3Account;
+use Carbon\Carbon;
 use Flarum\Foundation\ValidationException;
 use Illuminate\Contracts\Translation\Translator;
 use Illuminate\Support\Arr;
@@ -51,6 +52,9 @@ class CreateWeb3AccountHandler
                 'signature' => $this->translator->trans('blomstra-web3-wallets.forum.connect-wallet-modal.signature-invalid'),
             ]);
         }
+
+        // Update last verification time.
+        $account->last_verified_at = Carbon::now();
 
         // Signed Message verified so we can save.
         $account->save();

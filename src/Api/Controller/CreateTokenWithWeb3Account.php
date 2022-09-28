@@ -5,6 +5,7 @@ namespace Blomstra\Web3\Api\Controller;
 use Blomstra\Web3\Verifier\VerificationManager;
 use Blomstra\Web3\Web3AccountRepository;
 use Blomstra\Web3\Web3LoginValidator;
+use Carbon\Carbon;
 use Flarum\Http\RememberAccessToken;
 use Flarum\Http\SessionAccessToken;
 use Flarum\User\Exception\NotAuthenticatedException;
@@ -60,6 +61,10 @@ class CreateTokenWithWeb3Account implements RequestHandlerInterface
         if (! $this->verifiers->get($account->type)->verify($signature, $user->username, $address)) {
             throw new NotAuthenticatedException();
         }
+
+        // Update last verification time.
+        $account->last_verified_at = Carbon::now();
+        $account->save();
 
         // Create and return the access token.
         if (Arr::get($body, 'remember')) {

@@ -24,12 +24,12 @@ class ListTest extends TestCase
                 ['id' => 4, 'username' => 'david', 'email' => 'david@machine.local', 'is_email_confirmed' => 1],
             ],
             'web3_accounts' => [
-                ['id' => 1, 'user_id' => 2, 'address' => 'some_address1', 'source' => 'polkadot', 'type' => 'sr25519', 'created_at' => Carbon::now()],
-                ['id' => 2, 'user_id' => 3, 'address' => 'some_address2', 'source' => 'ethereum', 'type' => 'sr25519', 'created_at' => Carbon::now()],
-                ['id' => 3, 'user_id' => 2, 'address' => 'some_address3', 'source' => 'polkadot', 'type' => 'sr25519', 'created_at' => Carbon::now()],
-                ['id' => 4, 'user_id' => 3, 'address' => 'some_address4', 'source' => 'ethereum', 'type' => 'sr25519', 'created_at' => Carbon::now()],
-                ['id' => 5, 'user_id' => 4, 'address' => 'some_address5', 'source' => 'polkadot', 'type' => 'sr25519', 'created_at' => Carbon::now()],
-                ['id' => 6, 'user_id' => 2, 'address' => 'some_address6', 'source' => 'ethereum', 'type' => 'sr25519', 'created_at' => Carbon::now()],
+                ['id' => 1, 'user_id' => 2, 'address' => 'some_address1', 'source' => 'polkadot', 'type' => 'sr25519', 'attached_at' => Carbon::now()],
+                ['id' => 2, 'user_id' => 3, 'address' => 'some_address2', 'source' => 'ethereum', 'type' => 'sr25519', 'attached_at' => Carbon::now()],
+                ['id' => 3, 'user_id' => 2, 'address' => 'some_address3', 'source' => 'polkadot', 'type' => 'sr25519', 'attached_at' => Carbon::now()],
+                ['id' => 4, 'user_id' => 3, 'address' => 'some_address4', 'source' => 'ethereum', 'type' => 'eth', 'attached_at' => Carbon::now()],
+                ['id' => 5, 'user_id' => 4, 'address' => 'some_address5', 'source' => 'polkadot', 'type' => 'sr25519', 'attached_at' => Carbon::now()],
+                ['id' => 6, 'user_id' => 2, 'address' => 'some_address6', 'source' => 'ethereum', 'type' => 'eth', 'attached_at' => Carbon::now()],
             ],
         ]);
     }
@@ -48,27 +48,6 @@ class ListTest extends TestCase
 
         $this->assertEquals(200, $response->getStatusCode());
         $this->assertEqualsCanonicalizing($addressIds, Arr::pluck($body['data'], 'id'));
-    }
-
-    /**
-     * @test
-     */
-    public function user_can_filter_addresses_by_source()
-    {
-        $response = $this->send(
-            $this->request('GET', '/api/web3/accounts', [
-                'authenticatedAs' => 2,
-            ])->withQueryParams([
-                'filter' => [
-                    'source' => 'polkadot',
-                ],
-            ])
-        );
-
-        $body = json_decode($response->getBody()->getContents(), true);
-
-        $this->assertEquals(200, $response->getStatusCode());
-        $this->assertEqualsCanonicalizing([1, 3], Arr::pluck($body['data'], 'id'));
     }
 
     public function allowedUsersToView(): array

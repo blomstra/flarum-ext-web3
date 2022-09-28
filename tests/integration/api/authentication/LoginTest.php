@@ -38,7 +38,7 @@ class LoginTest extends TestCase
 
         $response = $this->send(
             $this->requestWithCsrfToken(
-                $this->request('POST', '/api/web3/login', [
+                $this->request('POST', '/api/web3/token', [
                     'json' => [
                         'identification' => $this->normalUser()['username'],
                         'address' => '0x'.$pair[1],
@@ -66,7 +66,7 @@ class LoginTest extends TestCase
     {
         $response = $this->send(
             $this->requestWithCsrfToken(
-                $this->request('POST', '/api/web3/login', [
+                $this->request('POST', '/api/web3/token', [
                     'json' => [
                         'identification' => $this->normalUser()['username'],
                         'address' => '0x0000000000000000',
