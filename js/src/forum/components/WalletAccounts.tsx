@@ -12,8 +12,10 @@ import type Mithril from 'mithril';
 import { EvmWallet, WalletMethods } from '@subwallet/wallet-connect/types';
 
 export interface IWalletAccountsAttrs extends ComponentAttrs {
+  username: string;
   wallet: Wallet;
   onback: () => void;
+  onattach?: (address: string, signature: string) => void;
 }
 
 export default class WalletAccounts<CustomAttrs extends IWalletAccountsAttrs = IWalletAccountsAttrs> extends Component<CustomAttrs> {
@@ -161,26 +163,32 @@ export default class WalletAccounts<CustomAttrs extends IWalletAccountsAttrs = I
         // Trigger the extension popup
         const { signature } = await signer.signRaw!({
           type: 'bytes',
-          data: stringToHex(app.session.user!.username()),
+          data: stringToHex(this.attrs.username),
           address: account.address,
         });
 
-        // Submit account to the backend
-        const savedAccount = await app.store.createRecord<Web3Account>('web3-accounts').save(
-          {
-            address: u8aToHex(decodeAddress(account.address)),
-            source: this.attrs.wallet.extensionName,
-            // @ts-ignore
-            type: account.type || '',
-          },
-          {
-            meta: {
-              signature,
-            },
-          }
-        );
+        const hexAddress = u8aToHex(decodeAddress(account.address));
 
-        this.savedAccounts.push(savedAccount);
+        if (app.session.user) {
+          // Submit account to the backend
+          const savedAccount = await app.store.createRecord<Web3Account>('web3-accounts').save(
+            {
+              address: hexAddress,
+              source: this.attrs.wallet.extensionName,
+              // @ts-ignore
+              type: account.type || '',
+            },
+            {
+              meta: {
+                signature,
+              },
+            }
+          );
+
+          this.savedAccounts.push(savedAccount);
+        }
+
+        if (this.attrs.onattach) this.attrs.onattach(hexAddress, signature);
       } catch (err) {
         app.alerts.show({ type: 'error' }, app.translator.trans('blomstra-web3-wallets.forum.connect-wallet-modal.could-not-sign'));
       }
@@ -191,28 +199,32 @@ export default class WalletAccounts<CustomAttrs extends IWalletAccountsAttrs = I
   }
 
   async connectEvmAccount(address: string) {
-    try {
-      const signature = await (this.attrs.wallet as EvmWallet).request<string>({
-        method: 'personal_sign',
-        params: [address, app.session.user!.username()],
-      });
+    const signature = await (this.attrs.wallet as EvmWallet).request<string>({
+      method: 'personal_sign',
+      params: [address, this.attrs.username],
+    });
 
-      // Submit account to the backend
-      const savedAccount = await app.store.createRecord<Web3Account>('web3-accounts').save(
-        {
-          address: address,
-          source: this.attrs.wallet.extensionName,
-          type: 'eth',
-        },
-        {
-          meta: {
-            signature,
+    if (signature) {
+      if (app.session.user) {
+        // Submit account to the backend
+        const savedAccount = await app.store.createRecord<Web3Account>('web3-accounts').save(
+          {
+            address: address,
+            source: this.attrs.wallet.extensionName,
+            type: 'eth',
           },
-        }
-      );
+          {
+            meta: {
+              signature,
+            },
+          }
+        );
 
-      this.savedAccounts.push(savedAccount);
-    } catch (err) {
+        this.savedAccounts.push(savedAccount);
+      }
+
+      if (this.attrs.onattach) this.attrs.onattach(address, signature);
+    } else {
       app.alerts.show({ type: 'error' }, app.translator.trans('blomstra-web3-wallets.forum.connect-wallet-modal.could-not-sign'));
     }
 

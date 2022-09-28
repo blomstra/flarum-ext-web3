@@ -11,7 +11,10 @@ import Web3Account from '../models/Web3Account';
 import WalletAccounts from './WalletAccounts';
 import LoadingIndicator from 'flarum/common/components/LoadingIndicator';
 
-export interface IConnectWalletModalAttrs extends IInternalModalAttrs {}
+export interface IConnectWalletModalAttrs extends IInternalModalAttrs {
+  username: string;
+  onattach?: (address: string) => void;
+}
 
 export default class ConnectWalletModal<CustomAttrs extends IConnectWalletModalAttrs = IConnectWalletModalAttrs> extends Modal<CustomAttrs> {
   private selectedWallet: Wallet | null = null;
@@ -100,7 +103,14 @@ export default class ConnectWalletModal<CustomAttrs extends IConnectWalletModalA
       return <LoadingIndicator />;
     }
 
-    return <WalletAccounts wallet={this.selectedWallet} onback={this.listWallets.bind(this)} />;
+    return (
+      <WalletAccounts
+        username={this.attrs.username}
+        wallet={this.selectedWallet}
+        onback={this.listWallets.bind(this)}
+        onattach={this.attrs.onattach}
+      />
+    );
   }
 
   listWallets() {

@@ -1,14 +1,17 @@
 blomstra-web3-wallets:
   forum:
     connect-wallet-modal:
-      attach_address: Attach address
+      attach_address: Bind address
       connection-request-rejected: Connection request rejected
       could-not-sign: Could not sign username cryptographically on selected account.
       disconnect: Disconnect
-      evm_attach_current_address: Attach current address ({address})
-      goback: Back to wallet selection
+      evm_attach_current_address: Bind current address ({address})
+      goback: Back to wallets
       signature-invalid: The signature is invalid.
       title: Connect Wallet
-      unattach_address: Unattach address
+      unattach_address: Unbind address
     header:
       wallet-connect-label: Connect Wallet
+    log-in:
+      with-wallet: Log in with web3 wallet
+      select-wallet-account: Select wallet account {rightArrow}
