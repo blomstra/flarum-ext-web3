@@ -1,5 +1,5 @@
 import Model from 'flarum/common/Model';
-import { encodeAddress } from "@polkadot/util-crypto";
+import { encodeAddress } from '@polkadot/util-crypto';
 
 export default class Web3Account extends Model {
   get encodedAddress() {

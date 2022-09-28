@@ -1,8 +1,4 @@
-import {
-  EvmWallet,
-  Wallet as PolkadotWallet,
-  WalletAccount as PolkadotWalletAccount
-} from "@subwallet/wallet-connect/types";
+import { EvmWallet, Wallet as PolkadotWallet, WalletAccount as PolkadotWalletAccount } from '@subwallet/wallet-connect/types';
 
 export type WalletKindKey = 'polkadot' | 'ethereum';
 
