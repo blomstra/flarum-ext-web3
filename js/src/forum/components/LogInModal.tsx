@@ -1,11 +1,11 @@
 import app from 'flarum/forum/app';
-import LogInModal from 'flarum/forum/components/LogInModal';
+import BaseLogInModal from 'flarum/forum/components/LogInModal';
 import type ItemList from 'flarum/common/utils/ItemList';
 import ConnectWalletModal from './ConnectWalletModal';
 import Button from 'flarum/common/components/Button';
 import icon from 'flarum/common/helpers/icon';
 
-export default class LoginModal extends LogInModal {
+export default class LogInModal extends BaseLogInModal {
   title() {
     return app.translator.trans('blomstra-web3-wallets.forum.log-in.with-wallet');
   }

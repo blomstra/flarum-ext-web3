@@ -14,4 +14,10 @@ blomstra-web3-wallets:
       wallet-connect-label: Connect Wallet
     log-in:
       with-wallet: Log in with web3 wallet
-      select-wallet-account: Select wallet account {rightArrow}
+      select-wallet-account: => blomstra-web3-wallets.ref.select-wallet-account
+    sign-up:
+      with-wallet: Sign up with web3 wallet
+      select-wallet-account: => blomstra-web3-wallets.ref.select-wallet-account
+
+  ref:
+    select-wallet-account: Select wallet account {rightArrow}

@@ -29,14 +29,14 @@ class Web3Account extends AbstractModel
 
     protected $table = 'web3_accounts';
 
-    public static function create(User $actor, $get, $get1, $get2): self
+    public static function create(User $actor, string $address, string $source, string $type): self
     {
         $account = new static;
 
         $account->user_id = $actor->id;
-        $account->address = $get;
-        $account->source = $get1;
-        $account->type = $get2;
+        $account->address = $address;
+        $account->source = $source;
+        $account->type = $type;
 
         return $account;
     }

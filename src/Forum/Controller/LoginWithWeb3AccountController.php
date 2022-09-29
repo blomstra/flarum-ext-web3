@@ -22,7 +22,7 @@ use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Psr\Http\Server\RequestHandlerInterface;
 
-class LoginWithWeb3Account implements RequestHandlerInterface
+class LoginWithWeb3AccountController implements RequestHandlerInterface
 {
     public function __construct(
         protected UserRepository $users,

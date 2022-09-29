@@ -10,12 +10,13 @@ import Tooltip from 'flarum/common/components/Tooltip';
 import LoadingIndicator from 'flarum/common/components/LoadingIndicator';
 import type Mithril from 'mithril';
 import { EvmWallet, WalletMethods } from '@subwallet/wallet-connect/types';
+import RequestError from 'flarum/common/utils/RequestError';
 
 export interface IWalletAccountsAttrs extends ComponentAttrs {
   username: string;
   wallet: Wallet;
   onback: () => void;
-  onattach?: (address: string, signature: string) => void;
+  onattach?: (address: string, signature: string, source?: string, type?: string) => void;
 }
 
 export default class WalletAccounts<CustomAttrs extends IWalletAccountsAttrs = IWalletAccountsAttrs> extends Component<CustomAttrs> {
@@ -168,17 +169,20 @@ export default class WalletAccounts<CustomAttrs extends IWalletAccountsAttrs = I
         });
 
         const hexAddress = u8aToHex(decodeAddress(account.address));
+        // @ts-ignore
+        const type = account.type;
+        const source = this.attrs.wallet.extensionName;
 
         if (app.session.user) {
           // Submit account to the backend
           const savedAccount = await app.store.createRecord<Web3Account>('web3-accounts').save(
             {
               address: hexAddress,
-              source: this.attrs.wallet.extensionName,
-              // @ts-ignore
-              type: account.type || '',
+              source,
+              type,
             },
             {
+              errorHandler: this.onerror.bind(this),
               meta: {
                 signature,
               },
@@ -188,7 +192,7 @@ export default class WalletAccounts<CustomAttrs extends IWalletAccountsAttrs = I
           this.savedAccounts.push(savedAccount);
         }
 
-        if (this.attrs.onattach) this.attrs.onattach(hexAddress, signature);
+        if (this.attrs.onattach) this.attrs.onattach(hexAddress, signature, source, type);
       } catch (err) {
         app.alerts.show({ type: 'error' }, app.translator.trans('blomstra-web3-wallets.forum.connect-wallet-modal.could-not-sign'));
       }
@@ -205,15 +209,19 @@ export default class WalletAccounts<CustomAttrs extends IWalletAccountsAttrs = I
     });
 
     if (signature) {
+      const type = 'eth';
+      const source = this.attrs.wallet.extensionName;
+
       if (app.session.user) {
         // Submit account to the backend
         const savedAccount = await app.store.createRecord<Web3Account>('web3-accounts').save(
           {
             address: address,
-            source: this.attrs.wallet.extensionName,
-            type: 'eth',
+            source,
+            type,
           },
           {
+            errorHandler: this.onerror.bind(this),
             meta: {
               signature,
             },
@@ -223,7 +231,7 @@ export default class WalletAccounts<CustomAttrs extends IWalletAccountsAttrs = I
         this.savedAccounts.push(savedAccount);
       }
 
-      if (this.attrs.onattach) this.attrs.onattach(address, signature);
+      if (this.attrs.onattach) this.attrs.onattach(address, signature, source, type);
     } else {
       app.alerts.show({ type: 'error' }, app.translator.trans('blomstra-web3-wallets.forum.connect-wallet-modal.could-not-sign'));
     }
@@ -255,5 +263,13 @@ export default class WalletAccounts<CustomAttrs extends IWalletAccountsAttrs = I
     return this.savedAccounts.some(
       (a) => (this.walletIsEvm() && a.address() === address) || (!this.walletIsEvm() && a.address() === u8aToHex(decodeAddress(address)))
     );
+  }
+
+  onerror(error: RequestError) {
+    if (error.status === 401) {
+      app.alerts.show({ type: 'error' }, app.translator.trans('blomstra-web3-wallets.forum.connect-wallet-modal.signature-invalid'));
+    } else {
+      throw error;
+    }
   }
 }

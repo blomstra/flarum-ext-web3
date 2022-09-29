@@ -2,6 +2,7 @@
 
 namespace Blomstra\Web3\Command;
 
+use Blomstra\Web3\Exception\InvalidSignatureException;
 use Blomstra\Web3\Verifier\VerificationManager;
 use Blomstra\Web3\Web3Account;
 use Carbon\Carbon;
@@ -22,6 +23,7 @@ class CreateWeb3AccountHandler
     /**
      * @throws ValidationException|\Illuminate\Validation\ValidationException
      * @throws \Illuminate\Contracts\Container\BindingResolutionException
+     * @throws InvalidSignatureException
      */
     public function handle(CreateWeb3Account $command): Web3Account
     {
@@ -48,9 +50,7 @@ class CreateWeb3AccountHandler
             ->verify($signature, $actor->username, $account->address);
 
         if (! $isValid) {
-            throw new ValidationException([
-                'signature' => $this->translator->trans('blomstra-web3-wallets.forum.connect-wallet-modal.signature-invalid'),
-            ]);
+            throw new InvalidSignatureException();
         }
 
         // Update last verification time.

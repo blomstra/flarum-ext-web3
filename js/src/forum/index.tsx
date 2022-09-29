@@ -2,15 +2,17 @@ import app from 'flarum/forum/app';
 import { extend } from 'flarum/common/extend';
 import HeaderSecondary from 'flarum/forum/components/HeaderSecondary';
 import Button from 'flarum/common/components/Button';
-import ConnectWalletModal from './components/ConnectWalletModal';
 import Tooltip from 'flarum/common/components/Tooltip';
 import LogInButtons from 'flarum/forum/components/LogInButtons';
+import BaseSignUpModal from 'flarum/forum/components/SignUpModal';
 import { getWallets as getRustWallets } from '@subwallet/wallet-connect/dotsama/wallets';
 import { getEvmWallets } from '@subwallet/wallet-connect/evm/evmWallets';
 
 import Web3Account from './models/Web3Account';
 import LogInButton from './components/LogInButton';
-import LoginModal from './components/LoginModal';
+import LogInModal from './components/LogInModal';
+import ConnectWalletModal from './components/ConnectWalletModal';
+import SignUpModal from './components/SignUpModal';
 
 app.initializers.add('blomstra/web3-wallets', () => {
   app.store.models['web3-accounts'] = Web3Account;
@@ -50,12 +52,25 @@ app.initializers.add('blomstra/web3-wallets', () => {
     }
   });
 
+  // Modify signup modal to add context to our login modal to be able to tell a login from a sigup.
+  extend(BaseSignUpModal.prototype, 'body', function (vnode) {
+    vnode[0] = !this.attrs.token && <LogInButtons isSignUp={true} />;
+  });
+
   // Adds a "Login with web3 account" login option.
   extend(LogInButtons.prototype, 'items', function (items) {
+    // @ts-ignore
+    const context = this.attrs.isSignUp ? 'sign-up' : 'log-in';
+
     items.add(
       'web3',
-      <LogInButton className="Button LogInButton--web3" icon="fas fa-wallet" onclick={() => app.modal.show(LoginModal)}>
-        {app.translator.trans('blomstra-web3-wallets.forum.log-in.with-wallet')}
+      <LogInButton
+        className="Button LogInButton--web3"
+        icon="fas fa-wallet"
+        // @ts-ignore
+        onclick={() => app.modal.show(this.attrs.isSignUp ? SignUpModal : LogInModal)}
+      >
+        {app.translator.trans(`blomstra-web3-wallets.forum.${context}.with-wallet`)}
       </LogInButton>
     );
   });
