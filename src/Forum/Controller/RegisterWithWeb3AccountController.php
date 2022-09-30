@@ -9,23 +9,18 @@
 
 namespace Blomstra\Web3\Forum\Controller;
 
-use Blomstra\Web3\Verifier\VerificationManager;
-use Blomstra\Web3\Web3Account;
-use Blomstra\Web3\Web3SignupValidator;
-use Carbon\Carbon;
 use Flarum\Api\Client;
 use Flarum\Http\RememberAccessToken;
 use Flarum\Http\Rememberer;
 use Flarum\Http\SessionAuthenticator;
-use Flarum\User\Exception\NotAuthenticatedException;
 use Flarum\User\RegistrationToken;
 use Flarum\User\User;
 use Illuminate\Database\ConnectionInterface;
 use Illuminate\Support\Arr;
-use Laminas\Diactoros\Stream;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Psr\Http\Server\RequestHandlerInterface;
+use Throwable;
 
 class RegisterWithWeb3AccountController implements RequestHandlerInterface
 {
@@ -33,7 +28,6 @@ class RegisterWithWeb3AccountController implements RequestHandlerInterface
         protected Client $api,
         protected SessionAuthenticator $authenticator,
         protected Rememberer $rememberer,
-        protected Web3SignupValidator $validator,
         protected ConnectionInterface $db
     ) {}
 
@@ -41,11 +35,9 @@ class RegisterWithWeb3AccountController implements RequestHandlerInterface
     {
         $data = $request->getParsedBody();
 
-        $this->validator->assertValid($data);
+        $this->db->beginTransaction();
 
-        $response = null;
-
-        $this->db->transaction(function () use ($request, $data, &$response) {
+        try {
             // Create registration token.
             $token = RegistrationToken::generate('', '', [], []);
             $token->save();
@@ -96,11 +88,17 @@ class RegisterWithWeb3AccountController implements RequestHandlerInterface
                     $this->authenticator->logIn($session, $token);
 
                     $response = $this->rememberer->remember($response, $token);
+
+                    $this->db->commit();
                 } else {
                     $response = $web3Response;
+                    $this->db->rollBack();
                 }
             }
-        });
+        } catch (Throwable $e) {
+            $this->db->rollBack();
+            throw $e;
+        }
 
         return $response;
     }
