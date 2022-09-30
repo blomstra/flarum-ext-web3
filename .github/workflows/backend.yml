@@ -10,3 +10,5 @@ jobs:
 
       backend_directory: .
       php_versions: '["8.0", "8.1"]'
+      php_extensions: 'curl, dom, gd, json, mbstring, openssl, pdo_mysql, tokenizer, zip, gmp, ffi'
+      php_ini_values: error_reporting=E_ALL;ffi.enable=true
