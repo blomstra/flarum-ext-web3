@@ -7,7 +7,7 @@ import icon from 'flarum/common/helpers/icon';
 
 export default class SignUpModal extends BaseSignUpModal {
   title() {
-    return app.translator.trans('blomstra-web3-wallets.forum.sign-up.with-wallet');
+    return app.translator.trans('blomstra-web3.forum.sign-up.with-wallet');
   }
 
   content() {
@@ -26,7 +26,7 @@ export default class SignUpModal extends BaseSignUpModal {
     items.setContent(
       'submit',
       <Button className="Button Button--block Button--primary" type="submit" disabled={!this.username() && !this.email()}>
-        {app.translator.trans('blomstra-web3-wallets.forum.sign-up.select-wallet-account', {
+        {app.translator.trans('blomstra-web3.forum.sign-up.select-wallet-account', {
           rightArrow: icon('fas fa-arrow-right'),
         })}
       </Button>

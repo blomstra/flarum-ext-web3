@@ -15,7 +15,7 @@ class LoginTest extends TestCase
     {
         parent::setUp();
 
-        $this->extension('blomstra-web3-wallets');
+        $this->extension('blomstra-web3');
 
         $pair = (new SchnorrSignaturesBindings())->pairFromSeed('fac7959dbfe72f052e5a0c3c8d6530f202b02fd8f9f5ca3580ec8deb7797479e');
 

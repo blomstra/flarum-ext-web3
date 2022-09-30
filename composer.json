@@ -1,5 +1,5 @@
 {
-    "name": "blomstra/web3-wallets",
+    "name": "blomstra/web3",
     "description": "Web3 for Flarum",
     "keywords": [
         "flarum"
@@ -10,7 +10,6 @@
         "php": "^8.0",
         "flarum/core": "^1.5.0",
         "ext-ffi": "*",
-        "ext-gmp": "*",
         "sijad/laravel-ecrecover": "^0.0.5"
     },
     "homepage": "https://blomstra.net",
@@ -33,12 +32,12 @@
     },
     "extra": {
         "flarum-extension": {
-            "title": "Web3 Login",
+            "title": "Web3",
             "category": "feature",
             "icon": {
                 "name": "fas fa-wallet",
-                "backgroundColor": "#b3047d",
-                "color": "#ffd8ff"
+                "backgroundColor": "#e3e7f1",
+                "color": "#ff9045"
             }
         },
         "flarum-cli": {

@@ -15,7 +15,7 @@ class ListTest extends TestCase
     {
         parent::setUp();
 
-        $this->extension('blomstra-web3-wallets');
+        $this->extension('blomstra-web3');
 
         $this->prepareDatabase([
             'users' => [

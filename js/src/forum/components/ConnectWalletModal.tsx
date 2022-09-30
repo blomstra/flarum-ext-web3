@@ -31,7 +31,7 @@ export default class ConnectWalletModal<CustomAttrs extends IConnectWalletModalA
   }
 
   title() {
-    return app.translator.trans('blomstra-web3-wallets.forum.connect-wallet-modal.title');
+    return app.translator.trans('blomstra-web3.forum.connect-wallet-modal.title');
   }
 
   content() {

@@ -1,5 +1,5 @@
 {
-  "name": "@blomstra/web3-wallets",
+  "name": "@blomstra/web3",
   "version": "0.0.0",
   "private": true,
   "prettier": "@flarum/prettier-config",

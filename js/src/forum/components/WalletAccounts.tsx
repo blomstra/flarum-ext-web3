@@ -50,7 +50,7 @@ export default class WalletAccounts<CustomAttrs extends IWalletAccountsAttrs = I
           m.redraw();
         })
         .catch(() => {
-          app.alerts.show({ type: 'error' }, app.translator.trans('blomstra-web3-wallets.forum.connect-wallet-modal.connection-request-rejected'));
+          app.alerts.show({ type: 'error' }, app.translator.trans('blomstra-web3.forum.connect-wallet-modal.connection-request-rejected'));
           this.attrs.onback();
         });
 
@@ -88,7 +88,7 @@ export default class WalletAccounts<CustomAttrs extends IWalletAccountsAttrs = I
       <div className={classList('WalletAccounts', { 'WalletAccounts--loading': this.loading })}>
         <div className="Form--centered">
           <Button className="Button Button--text Button--block WalletAccounts-goback" icon="fas fa-arrow-left" onclick={() => this.attrs.onback()}>
-            {app.translator.trans('blomstra-web3-wallets.forum.connect-wallet-modal.goback')}
+            {app.translator.trans('blomstra-web3.forum.connect-wallet-modal.goback')}
           </Button>
         </div>
         <div className="WalletAccounts-selectedWallet">
@@ -103,7 +103,7 @@ export default class WalletAccounts<CustomAttrs extends IWalletAccountsAttrs = I
                 onclick={this.attachNewEvmAccount.bind(this)}
                 disabled={this.accountIsAttached(this.currentEvmAddress!)}
               >
-                {app.translator.trans('blomstra-web3-wallets.forum.connect-wallet-modal.evm_attach_current_address', {
+                {app.translator.trans('blomstra-web3.forum.connect-wallet-modal.evm_attach_current_address', {
                   address: this.currentEvmAddress?.slice(0, 8) + '...',
                 })}
               </Button>
@@ -135,7 +135,7 @@ export default class WalletAccounts<CustomAttrs extends IWalletAccountsAttrs = I
           <div className="WalletAccounts-account-address">{account.address}</div>
         </div>
         <div className="WalletAccounts-account-actions">
-          <Tooltip text={app.translator.trans(`blomstra-web3-wallets.forum.connect-wallet-modal.${isAttached ? 'unattach' : 'attach'}_address`)}>
+          <Tooltip text={app.translator.trans(`blomstra-web3.forum.connect-wallet-modal.${isAttached ? 'unattach' : 'attach'}_address`)}>
             <Button
               className={classList('Button Button--icon', { 'Button--primary': !isAttached, 'Button--danger': isAttached })}
               icon={isAttached ? 'fas fa-unlink' : 'fas fa-plus'}
@@ -194,7 +194,7 @@ export default class WalletAccounts<CustomAttrs extends IWalletAccountsAttrs = I
 
         if (this.attrs.onattach) this.attrs.onattach(hexAddress, signature, source, type);
       } catch (err) {
-        app.alerts.show({ type: 'error' }, app.translator.trans('blomstra-web3-wallets.forum.connect-wallet-modal.could-not-sign'));
+        app.alerts.show({ type: 'error' }, app.translator.trans('blomstra-web3.forum.connect-wallet-modal.could-not-sign'));
       }
 
       this.loading = false;
@@ -233,7 +233,7 @@ export default class WalletAccounts<CustomAttrs extends IWalletAccountsAttrs = I
 
       if (this.attrs.onattach) this.attrs.onattach(address, signature, source, type);
     } else {
-      app.alerts.show({ type: 'error' }, app.translator.trans('blomstra-web3-wallets.forum.connect-wallet-modal.could-not-sign'));
+      app.alerts.show({ type: 'error' }, app.translator.trans('blomstra-web3.forum.connect-wallet-modal.could-not-sign'));
     }
 
     this.loading = false;
@@ -267,7 +267,7 @@ export default class WalletAccounts<CustomAttrs extends IWalletAccountsAttrs = I
 
   onerror(error: RequestError) {
     if (error.status === 401) {
-      app.alerts.show({ type: 'error' }, app.translator.trans('blomstra-web3-wallets.forum.connect-wallet-modal.signature-invalid'));
+      app.alerts.show({ type: 'error' }, app.translator.trans('blomstra-web3.forum.connect-wallet-modal.signature-invalid'));
     } else {
       throw error;
     }

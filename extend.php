@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is part of blomstra/web3-wallets.
+ * This file is part of blomstra/web3.
  *
  * Copyright (c) 2022 Blomstra Ltd.
  *

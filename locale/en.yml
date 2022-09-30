@@ -1,4 +1,4 @@
-blomstra-web3-wallets:
+blomstra-web3:
   forum:
     connect-wallet-modal:
       attach_address: Bind address
@@ -14,10 +14,10 @@ blomstra-web3-wallets:
       wallet-connect-label: Connect Wallet
     log-in:
       with-wallet: Log in with web3 wallet
-      select-wallet-account: => blomstra-web3-wallets.ref.select-wallet-account
+      select-wallet-account: => blomstra-web3.ref.select-wallet-account
     sign-up:
       with-wallet: Sign up with web3 wallet
-      select-wallet-account: => blomstra-web3-wallets.ref.select-wallet-account
+      select-wallet-account: => blomstra-web3.ref.select-wallet-account
 
   ref:
     select-wallet-account: Select wallet account {rightArrow}
