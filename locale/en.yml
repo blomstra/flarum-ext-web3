@@ -10,8 +10,9 @@ blomstra-web3:
       signature-invalid: The signature is invalid.
       title: Connect Wallet
       unattach_address: Unbind address
-    header:
-      wallet-connect-label: Connect Wallet
+    settings:
+      wallets_heading: Wallets
+      wallet-connect-button: Connect Wallet
     log-in:
       with-wallet: Log in with web3 wallet
       select-wallet-account: => blomstra-web3.ref.select-wallet-account
