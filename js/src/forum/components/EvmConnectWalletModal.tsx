@@ -82,10 +82,10 @@ export default class EvmConnectWalletModal<CustomAttrs extends IEvmConnectWallet
           <label>{this.currentAddress}</label>
           {app.web3accounts.exists(this.currentAddress) ? (
             <>
-              <Button className="Button" onclick={this.disconnect.bind(this)}>
+              <Button className="Button" onclick={() => this.disconnect(false)}>
                 {app.translator.trans('blomstra-web3.forum.evm-connect-wallet-modal.disconnect')}
               </Button>
-              <Button className="Button" onclick={this.disconnect.bind(this, true)}>
+              <Button className="Button" onclick={() => this.disconnect(true)}>
                 {app.translator.trans('blomstra-web3.forum.evm-connect-wallet-modal.disconnect-and-unbind')}
               </Button>
             </>
@@ -139,7 +139,7 @@ export default class EvmConnectWalletModal<CustomAttrs extends IEvmConnectWallet
     m.redraw();
   }
 
-  async disconnect(e: MouseEvent, unbind = false) {
+  async disconnect(unbind: boolean) {
     const provider = await this.getProvider();
 
     if (provider.close) {

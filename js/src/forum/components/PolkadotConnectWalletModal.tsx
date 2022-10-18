@@ -2,7 +2,6 @@ import app from 'flarum/forum/app';
 import Modal from 'flarum/common/components/Modal';
 import ItemList from 'flarum/common/utils/ItemList';
 import type Mithril from 'mithril';
-import { Wallet, WalletKind } from '../../shims';
 import Button from 'flarum/common/components/Button';
 import icon from 'flarum/common/helpers/icon';
 import Link from 'flarum/common/components/Link';
@@ -10,6 +9,14 @@ import { ComponentAttrs } from 'flarum/common/Component';
 import WalletAccounts from './WalletAccounts';
 import LoadingIndicator from 'flarum/common/components/LoadingIndicator';
 import { IConnectWalletModalAttrs } from './ConnectWalletModal';
+import { Wallet } from '@subwallet/wallet-connect/types';
+import { getWallets as getDotsamaWallets } from '@subwallet/wallet-connect/dotsama/wallets';
+
+export interface WalletKind {
+  key: string;
+  title: string;
+  wallets: Wallet[];
+}
 
 export interface IPolkadotConnectWalletModalAttrs extends IConnectWalletModalAttrs {}
 
@@ -48,7 +55,13 @@ export default class PolkadotConnectWalletModal<
   walletKindItems() {
     const items = new ItemList<Mithril.Children>();
 
-    items.add('polkadot', <div className="Form-group">{this.walletKindView(app.wallets.polkadot)}</div>);
+    const wallets: WalletKind = {
+      key: 'polkadot',
+      title: 'Polkadot',
+      wallets: getDotsamaWallets(),
+    };
+
+    items.add('polkadot', <div className="Form-group">{this.walletKindView(wallets)}</div>);
 
     return items;
   }

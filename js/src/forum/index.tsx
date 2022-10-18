@@ -5,7 +5,6 @@ import LogInButtons from 'flarum/forum/components/LogInButtons';
 import BaseSignUpModal from 'flarum/forum/components/SignUpModal';
 import SettingsPage from 'flarum/forum/components/SettingsPage';
 import FieldSet from 'flarum/common/components/FieldSet';
-import { getWallets as getDotsamaWallets } from '@subwallet/wallet-connect/dotsama/wallets';
 
 import Web3Account from './models/Web3Account';
 import LogInButton from './components/LogInButton';
@@ -18,19 +17,6 @@ app.initializers.add('blomstra/web3', () => {
   app.store.models['web3-accounts'] = Web3Account;
 
   app.web3accounts = new Web3AccountsState();
-
-  app.wallets = {
-    polkadot: {
-      key: 'polkadot',
-      title: 'Polkadot',
-      wallets: getDotsamaWallets(),
-    },
-    ethereum: {
-      key: 'ethereum',
-      title: 'Ethereum',
-      wallets: [],
-    },
-  };
 
   // Session button to bind web3 accounts to current user account.
   extend(SettingsPage.prototype, 'settingsItems', (items) => {
