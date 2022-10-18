@@ -47,5 +47,8 @@ return [
         ->register(Web3ServiceProvider::class),
 
     (new Extend\ErrorHandling())
-        ->status('invalid_crypto_signature', StatusCodeInterface::STATUS_UNAUTHORIZED)
+        ->status('invalid_crypto_signature', StatusCodeInterface::STATUS_UNAUTHORIZED),
+
+    (new Extend\Settings())
+        ->serializeToForum('blomstra-web3.prioritize-web3-auth-modals', 'blomstra-web3.prioritize-web3-auth-modals', 'boolval')
 ];

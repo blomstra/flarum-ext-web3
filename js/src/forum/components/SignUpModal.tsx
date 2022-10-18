@@ -4,6 +4,8 @@ import type ItemList from 'flarum/common/utils/ItemList';
 import ConnectWalletModal from './ConnectWalletModal';
 import Button from 'flarum/common/components/Button';
 import icon from 'flarum/common/helpers/icon';
+import LogInModal from './LogInModal';
+import BaseLogInModal from 'flarum/forum/components/LogInModal';
 
 export default class SignUpModal extends BaseSignUpModal {
   title() {
@@ -15,6 +17,7 @@ export default class SignUpModal extends BaseSignUpModal {
       <div className="Modal-body">
         <div className="Form Form--centered">{this.fields().toArray()}</div>
       </div>,
+      <div className="Modal-footer">{this.footer()}</div>,
     ];
   }
 
@@ -36,7 +39,15 @@ export default class SignUpModal extends BaseSignUpModal {
   }
 
   footer() {
-    return [];
+    return [
+      <p className="LogInModal-forgotPassword">
+        <a onclick={() => app.modal.show(BaseLogInModal)}>{app.translator.trans('blomstra-web3.forum.sign-up.basic-signup-link')}</a>
+      </p>,
+
+      <p className="SignUpModal-logIn">
+        {app.translator.trans('core.forum.sign_up.log_in_text', { a: <a onclick={() => app.modal.show(LogInModal)} /> })}
+      </p>,
+    ];
   }
 
   onsubmit(e: SubmitEvent) {

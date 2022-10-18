@@ -15,6 +15,12 @@ __webpack_require__.r(__webpack_exports__);
 
 flarum_admin_app__WEBPACK_IMPORTED_MODULE_0___default().initializers.add('blomstra/web3', function () {
   // TODO: show if ffi extension is installed and is `ffi.enable` ini is true.
+
+  flarum_admin_app__WEBPACK_IMPORTED_MODULE_0___default().extensionData["for"]('blomstra-web3').registerSetting({
+    setting: 'blomstra-web3.prioritize-web3-auth-modals',
+    type: 'switch',
+    label: flarum_admin_app__WEBPACK_IMPORTED_MODULE_0___default().translator.trans('blomstra-web3.admin.settings.prioritize-web3-auth-modals')
+  });
 });
 
 /***/ }),

@@ -10,6 +10,7 @@ import LogInModal from './components/LogInModal';
 import SignUpModal from './components/SignUpModal';
 import Web3AccountsState from './states/Web3AccountsState';
 import AttachedWallets from './components/AttachedWallets';
+import HeaderSecondary from 'flarum/forum/components/HeaderSecondary';
 
 app.initializers.add('blomstra/web3', () => {
   app.store.models['web3-accounts'] = Web3Account;
@@ -42,5 +43,18 @@ app.initializers.add('blomstra/web3', () => {
         {app.translator.trans(`blomstra-web3.forum.${context}.with-wallet`)}
       </LogInButton>
     );
+  });
+
+  // Open Web3 Auth Modals by default
+  extend(HeaderSecondary.prototype, 'items', function (items) {
+    if (!app.forum.attribute<boolean>('blomstra-web3.prioritize-web3-auth-modals')) return;
+
+    if (items.has('signUp')) {
+      items.get('signUp').attrs.onclick = () => app.modal.show(SignUpModal);
+    }
+
+    if (items.has('logIn')) {
+      items.get('logIn').attrs.onclick = () => app.modal.show(LogInModal);
+    }
   });
 });
