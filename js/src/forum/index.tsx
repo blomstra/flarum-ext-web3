@@ -1,34 +1,34 @@
 import app from 'flarum/forum/app';
 import { extend } from 'flarum/common/extend';
-import HeaderSecondary from 'flarum/forum/components/HeaderSecondary';
 import Button from 'flarum/common/components/Button';
-import Tooltip from 'flarum/common/components/Tooltip';
 import LogInButtons from 'flarum/forum/components/LogInButtons';
 import BaseSignUpModal from 'flarum/forum/components/SignUpModal';
-import { getWallets as getRustWallets } from '@subwallet/wallet-connect/dotsama/wallets';
-import { getEvmWallets } from '@subwallet/wallet-connect/evm/evmWallets';
+import SettingsPage from 'flarum/forum/components/SettingsPage';
+import FieldSet from 'flarum/common/components/FieldSet';
+import { getWallets as getDotsamaWallets } from '@subwallet/wallet-connect/dotsama/wallets';
 
 import Web3Account from './models/Web3Account';
 import LogInButton from './components/LogInButton';
 import LogInModal from './components/LogInModal';
 import ConnectWalletModal from './components/ConnectWalletModal';
 import SignUpModal from './components/SignUpModal';
-import SettingsPage from 'flarum/forum/components/SettingsPage';
-import FieldSet from 'flarum/common/components/FieldSet';
+import Web3AccountsState from './states/Web3AccountsState';
 
 app.initializers.add('blomstra/web3', () => {
   app.store.models['web3-accounts'] = Web3Account;
+
+  app.web3accounts = new Web3AccountsState();
 
   app.wallets = {
     polkadot: {
       key: 'polkadot',
       title: 'Polkadot',
-      wallets: getRustWallets(),
+      wallets: getDotsamaWallets(),
     },
     ethereum: {
       key: 'ethereum',
       title: 'Ethereum',
-      wallets: getEvmWallets(),
+      wallets: [],
     },
   };
 

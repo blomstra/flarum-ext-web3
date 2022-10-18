@@ -5,6 +5,7 @@
   "prettier": "@flarum/prettier-config",
   "devDependencies": {
     "@flarum/prettier-config": "^1.0.0",
+    "@types/node": "^14.18.32",
     "flarum-tsconfig": "^1.0.2",
     "flarum-webpack-config": "^2.0.0",
     "prettier": "^2.7.1",
@@ -21,6 +22,7 @@
     "@polkadot/util": "^10.1.1",
     "@polkadot/util-crypto": "^10.1.1",
     "@subwallet/wallet-connect": "^0.2.3",
-    "svg-url-loader": "^7.1.1"
+    "svg-url-loader": "^7.1.1",
+    "web3modal": "^1.9.9"
   }
 }

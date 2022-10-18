@@ -1,6 +1,15 @@
 blomstra-web3:
   forum:
     connect-wallet-modal:
+      title: Connect Wallet
+      polkadot-wallets: Polkadot Wallets
+      evm-wallets: EVM Wallets
+    evm-connect-wallet-modal:
+      title: EVM Wallets
+      bind: Bind address to account
+      disconnect: Disconnect
+      disconnect-and-unbind: Disconnect & Unbind
+    polkadot-connect-wallet-modal:
       attach_address: Bind address
       connection-request-rejected: Connection request rejected
       could-not-sign: Could not sign username cryptographically on selected account.
@@ -8,7 +17,7 @@ blomstra-web3:
       evm_attach_current_address: Bind current address ({address})
       goback: Back to wallets
       signature-invalid: The signature is invalid.
-      title: Connect Wallet
+      title: Polkadot Wallets
       unattach_address: Unbind address
     settings:
       wallets_heading: Wallets
