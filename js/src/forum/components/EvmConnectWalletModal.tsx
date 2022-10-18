@@ -91,7 +91,9 @@ export default class EvmConnectWalletModal<CustomAttrs extends IEvmConnectWallet
             </>
           ) : (
             <Button className="Button" onclick={this.bind.bind(this)}>
-              {app.translator.trans('blomstra-web3.forum.evm-connect-wallet-modal.bind')}
+              {app.translator.trans(
+                app.session.user ? 'blomstra-web3.forum.evm-connect-wallet-modal.bind' : 'blomstra-web3.forum.evm-connect-wallet-modal.select'
+              )}
             </Button>
           )}
         </div>
@@ -102,12 +104,12 @@ export default class EvmConnectWalletModal<CustomAttrs extends IEvmConnectWallet
   async bind() {
     const provider = await this.getProvider();
 
-    const signature = await provider.request({
-      method: 'personal_sign',
-      params: [this.currentAddress, this.attrs.username],
-    });
+    try {
+      const signature = await provider.request({
+        method: 'personal_sign',
+        params: [this.currentAddress, this.attrs.username],
+      });
 
-    if (signature) {
       const type = 'eth';
       const source = getProviderInfo(provider).name;
 
@@ -131,7 +133,7 @@ export default class EvmConnectWalletModal<CustomAttrs extends IEvmConnectWallet
       }
 
       if (this.attrs.onattach) this.attrs.onattach(this.currentAddress!, signature, source, type);
-    } else {
+    } catch (e) {
       app.alerts.show({ type: 'error' }, app.translator.trans('blomstra-web3.forum.connect-wallet-modal.could-not-sign'));
     }
 

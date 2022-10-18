@@ -10400,11 +10400,14 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var flarum_common_components_LoadingIndicator__WEBPACK_IMPORTED_MODULE_6___default = /*#__PURE__*/__webpack_require__.n(flarum_common_components_LoadingIndicator__WEBPACK_IMPORTED_MODULE_6__);
 /* harmony import */ var web3modal__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! web3modal */ "./node_modules/web3modal/dist/index.js");
 /* harmony import */ var web3modal__WEBPACK_IMPORTED_MODULE_7___default = /*#__PURE__*/__webpack_require__.n(web3modal__WEBPACK_IMPORTED_MODULE_7__);
-/* harmony import */ var _subwallet_wallet_connect_dotsama_wallets__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! @subwallet/wallet-connect/dotsama/wallets */ "./node_modules/@subwallet/wallet-connect/dotsama/wallets.js");
-/* harmony import */ var _polkadot_util__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! @polkadot/util */ "./node_modules/@polkadot/util/hex/toU8a.js");
-/* harmony import */ var _polkadot_util_crypto__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! @polkadot/util-crypto */ "./node_modules/@polkadot/util-crypto/address/encode.js");
+/* harmony import */ var _subwallet_wallet_connect_dotsama_wallets__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! @subwallet/wallet-connect/dotsama/wallets */ "./node_modules/@subwallet/wallet-connect/dotsama/wallets.js");
+/* harmony import */ var _polkadot_util__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! @polkadot/util */ "./node_modules/@polkadot/util/hex/toU8a.js");
+/* harmony import */ var _polkadot_util_crypto__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! @polkadot/util-crypto */ "./node_modules/@polkadot/util-crypto/address/encode.js");
 /* harmony import */ var flarum_common_components_Tooltip__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! flarum/common/components/Tooltip */ "flarum/common/components/Tooltip");
 /* harmony import */ var flarum_common_components_Tooltip__WEBPACK_IMPORTED_MODULE_8___default = /*#__PURE__*/__webpack_require__.n(flarum_common_components_Tooltip__WEBPACK_IMPORTED_MODULE_8__);
+/* harmony import */ var flarum_common_utils_extractText__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! flarum/common/utils/extractText */ "flarum/common/utils/extractText");
+/* harmony import */ var flarum_common_utils_extractText__WEBPACK_IMPORTED_MODULE_9___default = /*#__PURE__*/__webpack_require__.n(flarum_common_utils_extractText__WEBPACK_IMPORTED_MODULE_9__);
+
 
 
 
@@ -10452,10 +10455,10 @@ var AttachedWallets = /*#__PURE__*/function (_Component) {
   _proto.accountView = function accountView(account) {
     var _this2 = this;
     var isEth = account.type() === 'eth';
-    var providerInfo = isEth ? (0,web3modal__WEBPACK_IMPORTED_MODULE_7__.getProviderInfoByName)(account.source()) : (0,_subwallet_wallet_connect_dotsama_wallets__WEBPACK_IMPORTED_MODULE_9__.getWalletBySource)(account.source());
+    var providerInfo = isEth ? (0,web3modal__WEBPACK_IMPORTED_MODULE_7__.getProviderInfoByName)(account.source()) : (0,_subwallet_wallet_connect_dotsama_wallets__WEBPACK_IMPORTED_MODULE_10__.getWalletBySource)(account.source());
     var logoSrc = isEth ? providerInfo == null ? void 0 : providerInfo.logo : providerInfo == null ? void 0 : providerInfo.logo.src;
     var walletName = isEth ? providerInfo == null ? void 0 : providerInfo.name : providerInfo == null ? void 0 : providerInfo.title;
-    var address = isEth ? account.address() : (0,_polkadot_util_crypto__WEBPACK_IMPORTED_MODULE_10__.encodeAddress)((0,_polkadot_util__WEBPACK_IMPORTED_MODULE_11__.hexToU8a)(account.address()));
+    var address = isEth ? account.address() : (0,_polkadot_util_crypto__WEBPACK_IMPORTED_MODULE_11__.encodeAddress)((0,_polkadot_util__WEBPACK_IMPORTED_MODULE_12__.hexToU8a)(account.address()));
     return m("div", {
       className: "AttachedWallets-account"
     }, m("div", {
@@ -10482,10 +10485,12 @@ var AttachedWallets = /*#__PURE__*/function (_Component) {
     }))));
   };
   _proto.unbind = function unbind(account) {
-    account["delete"]().then(function () {
-      flarum_forum_app__WEBPACK_IMPORTED_MODULE_2___default().web3accounts.remove(account.address());
-      m.redraw();
-    });
+    if (confirm(flarum_common_utils_extractText__WEBPACK_IMPORTED_MODULE_9___default()(flarum_forum_app__WEBPACK_IMPORTED_MODULE_2___default().translator.trans('blomstra-web3.forum.settings.unbind_confirm')))) {
+      account["delete"]().then(function () {
+        flarum_forum_app__WEBPACK_IMPORTED_MODULE_2___default().web3accounts.remove(account.address());
+        m.redraw();
+      });
+    }
   };
   return AttachedWallets;
 }((flarum_common_Component__WEBPACK_IMPORTED_MODULE_1___default()));
@@ -10532,6 +10537,7 @@ var ConnectWalletModal = /*#__PURE__*/function (_Modal) {
     return flarum_forum_app__WEBPACK_IMPORTED_MODULE_3___default().translator.trans('blomstra-web3.forum.connect-wallet-modal.title');
   };
   _proto.content = function content() {
+    var _this = this;
     return m("div", {
       className: "Modal-body"
     }, m("div", {
@@ -10541,16 +10547,12 @@ var ConnectWalletModal = /*#__PURE__*/function (_Modal) {
     }, m((flarum_common_components_Button__WEBPACK_IMPORTED_MODULE_2___default()), {
       className: "Button Blomstra-Web3-Button--polkadot Button--block",
       onclick: function onclick() {
-        return flarum_forum_app__WEBPACK_IMPORTED_MODULE_3___default().modal.show(_PolkadotConnectWalletModal__WEBPACK_IMPORTED_MODULE_4__["default"], {
-          username: flarum_forum_app__WEBPACK_IMPORTED_MODULE_3___default().session.user.username()
-        });
+        return flarum_forum_app__WEBPACK_IMPORTED_MODULE_3___default().modal.show(_PolkadotConnectWalletModal__WEBPACK_IMPORTED_MODULE_4__["default"], _this.attrs, true);
       }
     }, flarum_forum_app__WEBPACK_IMPORTED_MODULE_3___default().translator.trans('blomstra-web3.forum.connect-wallet-modal.polkadot-wallets')), m((flarum_common_components_Button__WEBPACK_IMPORTED_MODULE_2___default()), {
       className: "Button Blomstra-Web3-Button--evm Button--block",
       onclick: function onclick() {
-        return flarum_forum_app__WEBPACK_IMPORTED_MODULE_3___default().modal.show(_EvmConnectWalletModal__WEBPACK_IMPORTED_MODULE_5__["default"], {
-          username: flarum_forum_app__WEBPACK_IMPORTED_MODULE_3___default().session.user.username()
-        });
+        return flarum_forum_app__WEBPACK_IMPORTED_MODULE_3___default().modal.show(_EvmConnectWalletModal__WEBPACK_IMPORTED_MODULE_5__["default"], _this.attrs, true);
       }
     }, flarum_forum_app__WEBPACK_IMPORTED_MODULE_3___default().translator.trans('blomstra-web3.forum.connect-wallet-modal.evm-wallets')))));
   };
@@ -10675,7 +10677,7 @@ var EvmConnectWalletModal = /*#__PURE__*/function (_Modal) {
     }, flarum_forum_app__WEBPACK_IMPORTED_MODULE_3___default().translator.trans('blomstra-web3.forum.evm-connect-wallet-modal.disconnect-and-unbind'))) : m((flarum_common_components_Button__WEBPACK_IMPORTED_MODULE_6___default()), {
       className: "Button",
       onclick: this.bind.bind(this)
-    }, flarum_forum_app__WEBPACK_IMPORTED_MODULE_3___default().translator.trans('blomstra-web3.forum.evm-connect-wallet-modal.bind'))));
+    }, flarum_forum_app__WEBPACK_IMPORTED_MODULE_3___default().translator.trans((flarum_forum_app__WEBPACK_IMPORTED_MODULE_3___default().session.user) ? 'blomstra-web3.forum.evm-connect-wallet-modal.bind' : 'blomstra-web3.forum.evm-connect-wallet-modal.select'))));
   };
   _proto.bind = /*#__PURE__*/function () {
     var _bind = (0,_babel_runtime_helpers_esm_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__["default"])( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_2___default().mark(function _callee2() {
@@ -10688,17 +10690,14 @@ var EvmConnectWalletModal = /*#__PURE__*/function (_Modal) {
               return this.getProvider();
             case 2:
               provider = _context2.sent;
-              _context2.next = 5;
+              _context2.prev = 3;
+              _context2.next = 6;
               return provider.request({
                 method: 'personal_sign',
                 params: [this.currentAddress, this.attrs.username]
               });
-            case 5:
+            case 6:
               signature = _context2.sent;
-              if (!signature) {
-                _context2.next = 17;
-                break;
-              }
               type = 'eth';
               source = (0,web3modal__WEBPACK_IMPORTED_MODULE_4__.getProviderInfo)(provider).name;
               if (!(flarum_forum_app__WEBPACK_IMPORTED_MODULE_3___default().session.user)) {
@@ -10721,21 +10720,23 @@ var EvmConnectWalletModal = /*#__PURE__*/function (_Modal) {
               flarum_forum_app__WEBPACK_IMPORTED_MODULE_3___default().web3accounts.push(savedAccount);
             case 14:
               if (this.attrs.onattach) this.attrs.onattach(this.currentAddress, signature, source, type);
-              _context2.next = 18;
+              _context2.next = 20;
               break;
             case 17:
+              _context2.prev = 17;
+              _context2.t0 = _context2["catch"](3);
               flarum_forum_app__WEBPACK_IMPORTED_MODULE_3___default().alerts.show({
                 type: 'error'
               }, flarum_forum_app__WEBPACK_IMPORTED_MODULE_3___default().translator.trans('blomstra-web3.forum.connect-wallet-modal.could-not-sign'));
-            case 18:
+            case 20:
               this.loading = false;
               m.redraw();
-            case 20:
+            case 22:
             case "end":
               return _context2.stop();
           }
         }
-      }, _callee2, this);
+      }, _callee2, this, [[3, 17]]);
     }));
     function bind() {
       return _bind.apply(this, arguments);
@@ -11154,7 +11155,7 @@ var SignUpModal = /*#__PURE__*/function (_BaseSignUpModal) {
     items.setContent('submit', m((flarum_common_components_Button__WEBPACK_IMPORTED_MODULE_4___default()), {
       className: "Button Button--block Button--primary",
       type: "submit",
-      disabled: !this.username() && !this.email()
+      disabled: !this.username() || !this.email()
     }, flarum_forum_app__WEBPACK_IMPORTED_MODULE_1___default().translator.trans('blomstra-web3.forum.sign-up.select-wallet-account', {
       rightArrow: flarum_common_helpers_icon__WEBPACK_IMPORTED_MODULE_5___default()('fas fa-arrow-right')
     })));
@@ -11289,6 +11290,16 @@ var WalletAccounts = /*#__PURE__*/function (_Component) {
   };
   _proto.accountView = function accountView(account, accountIndex) {
     var isAttached = flarum_forum_app__WEBPACK_IMPORTED_MODULE_5___default().web3accounts.exists((0,_polkadot_util__WEBPACK_IMPORTED_MODULE_9__.u8aToHex)((0,_polkadot_util_crypto__WEBPACK_IMPORTED_MODULE_10__.decodeAddress)(account.address)));
+    var bindMessage = 'blomstra-web3.forum.polkadot-connect-wallet-modal.';
+    switch (isAttached) {
+      case true:
+        bindMessage += 'unattach_address';
+        break;
+      case false:
+        if ((flarum_forum_app__WEBPACK_IMPORTED_MODULE_5___default().session.user)) bindMessage += 'attach_address';
+        // For Login/Signup processes.
+        else bindMessage += 'select';
+    }
     return m("div", {
       key: accountIndex,
       className: flarum_common_utils_classList__WEBPACK_IMPORTED_MODULE_6___default()('WalletAccounts-account', {
@@ -11304,7 +11315,7 @@ var WalletAccounts = /*#__PURE__*/function (_Component) {
     }, account.address)), m("div", {
       className: "WalletAccounts-account-actions"
     }, m((flarum_common_components_Tooltip__WEBPACK_IMPORTED_MODULE_7___default()), {
-      text: flarum_forum_app__WEBPACK_IMPORTED_MODULE_5___default().translator.trans("blomstra-web3.forum.polkadot-connect-wallet-modal." + (isAttached ? 'unattach' : 'attach') + "_address")
+      text: flarum_forum_app__WEBPACK_IMPORTED_MODULE_5___default().translator.trans(bindMessage)
     }, m((flarum_common_components_Button__WEBPACK_IMPORTED_MODULE_4___default()), {
       className: flarum_common_utils_classList__WEBPACK_IMPORTED_MODULE_6___default()('Button Button--icon', {
         'Button--primary': !isAttached,
@@ -11374,7 +11385,7 @@ var WalletAccounts = /*#__PURE__*/function (_Component) {
               _context.t0 = _context["catch"](5);
               flarum_forum_app__WEBPACK_IMPORTED_MODULE_5___default().alerts.show({
                 type: 'error'
-              }, flarum_forum_app__WEBPACK_IMPORTED_MODULE_5___default().translator.trans('blomstra-web3.forum.polkadot-connect-wallet-modal.could-not-sign'));
+              }, flarum_forum_app__WEBPACK_IMPORTED_MODULE_5___default().translator.trans('blomstra-web3.forum.connect-wallet-modal.could-not-sign'));
             case 25:
               this.loading = false;
               m.redraw();
@@ -11419,7 +11430,7 @@ var WalletAccounts = /*#__PURE__*/function (_Component) {
     if (error.status === 401) {
       flarum_forum_app__WEBPACK_IMPORTED_MODULE_5___default().alerts.show({
         type: 'error'
-      }, flarum_forum_app__WEBPACK_IMPORTED_MODULE_5___default().translator.trans('blomstra-web3.forum.polkadot-connect-wallet-modal.signature-invalid'));
+      }, flarum_forum_app__WEBPACK_IMPORTED_MODULE_5___default().translator.trans('blomstra-web3.forum.connect-wallet-modal.signature-invalid'));
     } else {
       throw error;
     }
@@ -11769,6 +11780,17 @@ module.exports = flarum.core.compat['common/utils/ItemList'];
 
 "use strict";
 module.exports = flarum.core.compat['common/utils/classList'];
+
+/***/ }),
+
+/***/ "flarum/common/utils/extractText":
+/*!*****************************************************************!*\
+  !*** external "flarum.core.compat['common/utils/extractText']" ***!
+  \*****************************************************************/
+/***/ ((module) => {
+
+"use strict";
+module.exports = flarum.core.compat['common/utils/extractText'];
 
 /***/ }),
 

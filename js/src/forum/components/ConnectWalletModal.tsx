@@ -26,21 +26,13 @@ export default class ConnectWalletModal<CustomAttrs extends IConnectWalletModalA
           <div className="Form-group">
             <Button
               className="Button Blomstra-Web3-Button--polkadot Button--block"
-              onclick={() =>
-                app.modal.show(PolkadotConnectWalletModal, {
-                  username: app.session.user!.username(),
-                })
-              }
+              onclick={() => app.modal.show(PolkadotConnectWalletModal, this.attrs as Record<string, any>, true)}
             >
               {app.translator.trans('blomstra-web3.forum.connect-wallet-modal.polkadot-wallets')}
             </Button>
             <Button
               className="Button Blomstra-Web3-Button--evm Button--block"
-              onclick={() =>
-                app.modal.show(EvmConnectWalletModal, {
-                  username: app.session.user!.username(),
-                })
-              }
+              onclick={() => app.modal.show(EvmConnectWalletModal, this.attrs as Record<string, any>, true)}
             >
               {app.translator.trans('blomstra-web3.forum.connect-wallet-modal.evm-wallets')}
             </Button>

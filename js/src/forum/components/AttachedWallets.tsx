@@ -11,6 +11,7 @@ import { WalletInfo } from '@subwallet/wallet-connect/types';
 import { hexToU8a } from '@polkadot/util';
 import { encodeAddress } from '@polkadot/util-crypto';
 import Tooltip from 'flarum/common/components/Tooltip';
+import extractText from 'flarum/common/utils/extractText';
 
 export default class AttachedWallets extends Component {
   view() {
@@ -75,9 +76,11 @@ export default class AttachedWallets extends Component {
   }
 
   unbind(account: Web3Account) {
-    account.delete().then(() => {
-      app.web3accounts.remove(account.address());
-      m.redraw();
-    });
+    if (confirm(extractText(app.translator.trans('blomstra-web3.forum.settings.unbind_confirm')))) {
+      account.delete().then(() => {
+        app.web3accounts.remove(account.address());
+        m.redraw();
+      });
+    }
   }
 }

@@ -1,15 +1,12 @@
 import app from 'flarum/forum/app';
 import { extend } from 'flarum/common/extend';
-import Button from 'flarum/common/components/Button';
 import LogInButtons from 'flarum/forum/components/LogInButtons';
 import BaseSignUpModal from 'flarum/forum/components/SignUpModal';
 import SettingsPage from 'flarum/forum/components/SettingsPage';
-import FieldSet from 'flarum/common/components/FieldSet';
 
 import Web3Account from './models/Web3Account';
 import LogInButton from './components/LogInButton';
 import LogInModal from './components/LogInModal';
-import ConnectWalletModal from './components/ConnectWalletModal';
 import SignUpModal from './components/SignUpModal';
 import Web3AccountsState from './states/Web3AccountsState';
 import AttachedWallets from './components/AttachedWallets';

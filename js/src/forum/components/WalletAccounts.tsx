@@ -60,6 +60,18 @@ export default class WalletAccounts<CustomAttrs extends IWalletAccountsAttrs = I
   accountView(account: WalletAccount, accountIndex: number) {
     const isAttached = app.web3accounts.exists(u8aToHex(decodeAddress(account.address)));
 
+    let bindMessage = 'blomstra-web3.forum.polkadot-connect-wallet-modal.';
+
+    switch (isAttached) {
+      case true:
+        bindMessage += 'unattach_address';
+        break;
+      case false:
+        if (app.session.user) bindMessage += 'attach_address';
+        // For Login/Signup processes.
+        else bindMessage += 'select';
+    }
+
     return (
       <div
         key={accountIndex}
@@ -73,7 +85,7 @@ export default class WalletAccounts<CustomAttrs extends IWalletAccountsAttrs = I
           <div className="WalletAccounts-account-address">{account.address}</div>
         </div>
         <div className="WalletAccounts-account-actions">
-          <Tooltip text={app.translator.trans(`blomstra-web3.forum.polkadot-connect-wallet-modal.${isAttached ? 'unattach' : 'attach'}_address`)}>
+          <Tooltip text={app.translator.trans(bindMessage)}>
             <Button
               className={classList('Button Button--icon', { 'Button--primary': !isAttached, 'Button--danger': isAttached })}
               icon={isAttached ? 'fas fa-unlink' : 'fas fa-plus'}
@@ -132,7 +144,7 @@ export default class WalletAccounts<CustomAttrs extends IWalletAccountsAttrs = I
 
         if (this.attrs.onattach) this.attrs.onattach(hexAddress, signature, source, type);
       } catch (err) {
-        app.alerts.show({ type: 'error' }, app.translator.trans('blomstra-web3.forum.polkadot-connect-wallet-modal.could-not-sign'));
+        app.alerts.show({ type: 'error' }, app.translator.trans('blomstra-web3.forum.connect-wallet-modal.could-not-sign'));
       }
 
       this.loading = false;
@@ -149,7 +161,7 @@ export default class WalletAccounts<CustomAttrs extends IWalletAccountsAttrs = I
 
   onerror(error: RequestError) {
     if (error.status === 401) {
-      app.alerts.show({ type: 'error' }, app.translator.trans('blomstra-web3.forum.polkadot-connect-wallet-modal.signature-invalid'));
+      app.alerts.show({ type: 'error' }, app.translator.trans('blomstra-web3.forum.connect-wallet-modal.signature-invalid'));
     } else {
       throw error;
     }
