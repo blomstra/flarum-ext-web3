@@ -43,7 +43,7 @@ export default class LogInModal extends BaseLogInModal {
         <a onclick={() => app.modal.show(BaseLogInModal)}>{app.translator.trans('blomstra-web3.forum.log-in.basic-login-link')}</a>
       </p>,
 
-      app.forum.attribute('allowSignUp') ? (
+      app.forum.attribute('blomstra-web3.allow-sign-up') ? (
         <p className="LogInModal-signUp">
           {app.translator.trans('core.forum.log_in.sign_up_text', { a: <a onclick={() => app.modal.show(SignUpModal)} /> })}
         </p>

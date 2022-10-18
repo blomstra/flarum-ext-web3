@@ -50,5 +50,7 @@ return [
         ->status('invalid_crypto_signature', StatusCodeInterface::STATUS_UNAUTHORIZED),
 
     (new Extend\Settings())
+        ->default('blomstra-web3.allow-sign-up', 1)
+        ->serializeToForum('blomstra-web3.allow-sign-up', 'blomstra-web3.allow-sign-up', 'boolval')
         ->serializeToForum('blomstra-web3.prioritize-web3-auth-modals', 'blomstra-web3.prioritize-web3-auth-modals', 'boolval')
 ];

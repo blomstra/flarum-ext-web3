@@ -20,6 +20,10 @@ flarum_admin_app__WEBPACK_IMPORTED_MODULE_0___default().initializers.add('blomst
     setting: 'blomstra-web3.prioritize-web3-auth-modals',
     type: 'switch',
     label: flarum_admin_app__WEBPACK_IMPORTED_MODULE_0___default().translator.trans('blomstra-web3.admin.settings.prioritize-web3-auth-modals')
+  }).registerSetting({
+    setting: 'blomstra-web3.allow-sign-up',
+    type: 'switch',
+    label: flarum_admin_app__WEBPACK_IMPORTED_MODULE_0___default().translator.trans('blomstra-web3.admin.settings.allow-sign-up')
   });
 });
 

@@ -13,6 +13,8 @@ use Flarum\Api\Client;
 use Flarum\Http\RememberAccessToken;
 use Flarum\Http\Rememberer;
 use Flarum\Http\SessionAuthenticator;
+use Flarum\Settings\SettingsRepositoryInterface;
+use Flarum\User\Exception\NotAuthenticatedException;
 use Flarum\User\RegistrationToken;
 use Flarum\User\User;
 use Illuminate\Database\ConnectionInterface;
@@ -28,11 +30,16 @@ class RegisterWithWeb3AccountController implements RequestHandlerInterface
         protected Client $api,
         protected SessionAuthenticator $authenticator,
         protected Rememberer $rememberer,
-        protected ConnectionInterface $db
+        protected ConnectionInterface $db,
+        protected SettingsRepositoryInterface $settings
     ) {}
 
     public function handle(Request $request): ResponseInterface
     {
+        if (! $this->settings->get('blomstra-web3.allow-sign-up')) {
+            throw new NotAuthenticatedException();
+        }
+
         $data = $request->getParsedBody();
 
         $this->db->beginTransaction();
@@ -41,6 +48,11 @@ class RegisterWithWeb3AccountController implements RequestHandlerInterface
             // Create registration token.
             $token = RegistrationToken::generate('', '', [], []);
             $token->save();
+
+            // Our extension doesn't abide by `allow_sign_up` setting.
+            // So we temporarily make sure it's ON.
+            $initialAllowSignUpValue = $this->settings->get('allow_sign_up');
+            $this->settings->set('allow_sign_up', true);
 
             $response = $this->api
                 ->withParentRequest($request)
@@ -53,6 +65,9 @@ class RegisterWithWeb3AccountController implements RequestHandlerInterface
                     ]
                 ])
                 ->post('/users');
+
+            // Reset `allow_sign_up`
+            $this->settings->set('allow_sign_up', $initialAllowSignUpValue);
 
             $body = json_decode($response->getBody());
 

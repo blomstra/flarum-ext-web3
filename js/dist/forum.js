@@ -10932,7 +10932,7 @@ var LogInModal = /*#__PURE__*/function (_BaseLogInModal) {
       onclick: function onclick() {
         return flarum_forum_app__WEBPACK_IMPORTED_MODULE_1___default().modal.show((flarum_forum_components_LogInModal__WEBPACK_IMPORTED_MODULE_2___default()));
       }
-    }, flarum_forum_app__WEBPACK_IMPORTED_MODULE_1___default().translator.trans('blomstra-web3.forum.log-in.basic-login-link'))), flarum_forum_app__WEBPACK_IMPORTED_MODULE_1___default().forum.attribute('allowSignUp') ? m("p", {
+    }, flarum_forum_app__WEBPACK_IMPORTED_MODULE_1___default().translator.trans('blomstra-web3.forum.log-in.basic-login-link'))), flarum_forum_app__WEBPACK_IMPORTED_MODULE_1___default().forum.attribute('blomstra-web3.allow-sign-up') ? m("p", {
       className: "LogInModal-signUp"
     }, flarum_forum_app__WEBPACK_IMPORTED_MODULE_1___default().translator.trans('core.forum.log_in.sign_up_text', {
       a: m("a", {
@@ -11146,9 +11146,6 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var flarum_common_helpers_icon__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! flarum/common/helpers/icon */ "flarum/common/helpers/icon");
 /* harmony import */ var flarum_common_helpers_icon__WEBPACK_IMPORTED_MODULE_5___default = /*#__PURE__*/__webpack_require__.n(flarum_common_helpers_icon__WEBPACK_IMPORTED_MODULE_5__);
 /* harmony import */ var _LogInModal__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./LogInModal */ "./src/forum/components/LogInModal.tsx");
-/* harmony import */ var flarum_forum_components_LogInModal__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! flarum/forum/components/LogInModal */ "flarum/forum/components/LogInModal");
-/* harmony import */ var flarum_forum_components_LogInModal__WEBPACK_IMPORTED_MODULE_7___default = /*#__PURE__*/__webpack_require__.n(flarum_forum_components_LogInModal__WEBPACK_IMPORTED_MODULE_7__);
-
 
 
 
@@ -11187,13 +11184,13 @@ var SignUpModal = /*#__PURE__*/function (_BaseSignUpModal) {
     return items;
   };
   _proto.footer = function footer() {
-    return [m("p", {
+    return [flarum_forum_app__WEBPACK_IMPORTED_MODULE_1___default().forum.attribute('allowSignUp') ? m("p", {
       className: "LogInModal-forgotPassword"
     }, m("a", {
       onclick: function onclick() {
-        return flarum_forum_app__WEBPACK_IMPORTED_MODULE_1___default().modal.show((flarum_forum_components_LogInModal__WEBPACK_IMPORTED_MODULE_7___default()));
+        return flarum_forum_app__WEBPACK_IMPORTED_MODULE_1___default().modal.show((flarum_forum_components_SignUpModal__WEBPACK_IMPORTED_MODULE_2___default()));
       }
-    }, flarum_forum_app__WEBPACK_IMPORTED_MODULE_1___default().translator.trans('blomstra-web3.forum.sign-up.basic-signup-link'))), m("p", {
+    }, flarum_forum_app__WEBPACK_IMPORTED_MODULE_1___default().translator.trans('blomstra-web3.forum.sign-up.basic-signup-link'))) : m('[', null), m("p", {
       className: "SignUpModal-logIn"
     }, flarum_forum_app__WEBPACK_IMPORTED_MODULE_1___default().translator.trans('core.forum.sign_up.log_in_text', {
       a: m("a", {
@@ -11506,6 +11503,9 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _components_AttachedWallets__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ./components/AttachedWallets */ "./src/forum/components/AttachedWallets.tsx");
 /* harmony import */ var flarum_forum_components_HeaderSecondary__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! flarum/forum/components/HeaderSecondary */ "flarum/forum/components/HeaderSecondary");
 /* harmony import */ var flarum_forum_components_HeaderSecondary__WEBPACK_IMPORTED_MODULE_11___default = /*#__PURE__*/__webpack_require__.n(flarum_forum_components_HeaderSecondary__WEBPACK_IMPORTED_MODULE_11__);
+/* harmony import */ var flarum_common_components_Button__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! flarum/common/components/Button */ "flarum/common/components/Button");
+/* harmony import */ var flarum_common_components_Button__WEBPACK_IMPORTED_MODULE_12___default = /*#__PURE__*/__webpack_require__.n(flarum_common_components_Button__WEBPACK_IMPORTED_MODULE_12__);
+
 
 
 
@@ -11539,6 +11539,9 @@ flarum_forum_app__WEBPACK_IMPORTED_MODULE_0___default().initializers.add('blomst
     var _this = this;
     // @ts-ignore
     var context = this.attrs.isSignUp ? 'sign-up' : 'log-in';
+    if (context === 'sign-up' && !flarum_forum_app__WEBPACK_IMPORTED_MODULE_0___default().forum.attribute('blomstra-web3.allow-sign-up')) {
+      return;
+    }
     items.add('web3', m(_components_LogInButton__WEBPACK_IMPORTED_MODULE_6__["default"], {
       className: "Button LogInButton--web3",
       icon: "fas fa-wallet"
@@ -11552,13 +11555,18 @@ flarum_forum_app__WEBPACK_IMPORTED_MODULE_0___default().initializers.add('blomst
 
   // Open Web3 Auth Modals by default
   (0,flarum_common_extend__WEBPACK_IMPORTED_MODULE_1__.extend)((flarum_forum_components_HeaderSecondary__WEBPACK_IMPORTED_MODULE_11___default().prototype), 'items', function (items) {
-    if (!flarum_forum_app__WEBPACK_IMPORTED_MODULE_0___default().forum.attribute('blomstra-web3.prioritize-web3-auth-modals')) return;
-    if (items.has('signUp')) {
-      items.get('signUp').attrs.onclick = function () {
-        return flarum_forum_app__WEBPACK_IMPORTED_MODULE_0___default().modal.show(_components_SignUpModal__WEBPACK_IMPORTED_MODULE_8__["default"]);
-      };
+    if (flarum_forum_app__WEBPACK_IMPORTED_MODULE_0___default().forum.attribute('blomstra-web3.prioritize-web3-auth-modals') && flarum_forum_app__WEBPACK_IMPORTED_MODULE_0___default().forum.attribute('blomstra-web3.allow-sign-up') || flarum_forum_app__WEBPACK_IMPORTED_MODULE_0___default().forum.attribute('blomstra-web3.allow-sign-up') && !flarum_forum_app__WEBPACK_IMPORTED_MODULE_0___default().forum.attribute('allowSignUp')) {
+      if (items.has('signUp')) {
+        items.remove('signUp');
+      }
+      items.add('signUp', m((flarum_common_components_Button__WEBPACK_IMPORTED_MODULE_12___default()), {
+        className: "Button Button--link",
+        onclick: function onclick() {
+          return flarum_forum_app__WEBPACK_IMPORTED_MODULE_0___default().modal.show(_components_SignUpModal__WEBPACK_IMPORTED_MODULE_8__["default"]);
+        }
+      }, flarum_forum_app__WEBPACK_IMPORTED_MODULE_0___default().translator.trans('core.forum.header.sign_up_link')), 10);
     }
-    if (items.has('logIn')) {
+    if (flarum_forum_app__WEBPACK_IMPORTED_MODULE_0___default().forum.attribute('blomstra-web3.prioritize-web3-auth-modals') && items.has('logIn')) {
       items.get('logIn').attrs.onclick = function () {
         return flarum_forum_app__WEBPACK_IMPORTED_MODULE_0___default().modal.show(_components_LogInModal__WEBPACK_IMPORTED_MODULE_7__["default"]);
       };

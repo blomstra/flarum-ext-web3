@@ -5,7 +5,6 @@ import ConnectWalletModal from './ConnectWalletModal';
 import Button from 'flarum/common/components/Button';
 import icon from 'flarum/common/helpers/icon';
 import LogInModal from './LogInModal';
-import BaseLogInModal from 'flarum/forum/components/LogInModal';
 
 export default class SignUpModal extends BaseSignUpModal {
   title() {
@@ -40,9 +39,13 @@ export default class SignUpModal extends BaseSignUpModal {
 
   footer() {
     return [
-      <p className="LogInModal-forgotPassword">
-        <a onclick={() => app.modal.show(BaseLogInModal)}>{app.translator.trans('blomstra-web3.forum.sign-up.basic-signup-link')}</a>
-      </p>,
+      app.forum.attribute('allowSignUp') ? (
+        <p className="LogInModal-forgotPassword">
+          <a onclick={() => app.modal.show(BaseSignUpModal)}>{app.translator.trans('blomstra-web3.forum.sign-up.basic-signup-link')}</a>
+        </p>
+      ) : (
+        <></>
+      ),
 
       <p className="SignUpModal-logIn">
         {app.translator.trans('core.forum.sign_up.log_in_text', { a: <a onclick={() => app.modal.show(LogInModal)} /> })}

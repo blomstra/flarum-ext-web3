@@ -1,6 +1,7 @@
 blomstra-web3:
   admin:
     settings:
+      allow-sign-up: Allow Signup with web3
       prioritize-web3-auth-modals: Open web3 Login/Signup by default
 
   forum:

@@ -11,6 +11,7 @@ import SignUpModal from './components/SignUpModal';
 import Web3AccountsState from './states/Web3AccountsState';
 import AttachedWallets from './components/AttachedWallets';
 import HeaderSecondary from 'flarum/forum/components/HeaderSecondary';
+import Button from 'flarum/common/components/Button';
 
 app.initializers.add('blomstra/web3', () => {
   app.store.models['web3-accounts'] = Web3Account;
@@ -32,6 +33,10 @@ app.initializers.add('blomstra/web3', () => {
     // @ts-ignore
     const context = this.attrs.isSignUp ? 'sign-up' : 'log-in';
 
+    if (context === 'sign-up' && !app.forum.attribute<boolean>('blomstra-web3.allow-sign-up')) {
+      return;
+    }
+
     items.add(
       'web3',
       <LogInButton
@@ -47,13 +52,24 @@ app.initializers.add('blomstra/web3', () => {
 
   // Open Web3 Auth Modals by default
   extend(HeaderSecondary.prototype, 'items', function (items) {
-    if (!app.forum.attribute<boolean>('blomstra-web3.prioritize-web3-auth-modals')) return;
+    if (
+      (app.forum.attribute<boolean>('blomstra-web3.prioritize-web3-auth-modals') && app.forum.attribute<boolean>('blomstra-web3.allow-sign-up')) ||
+      (app.forum.attribute<boolean>('blomstra-web3.allow-sign-up') && !app.forum.attribute<boolean>('allowSignUp'))
+    ) {
+      if (items.has('signUp')) {
+        items.remove('signUp');
+      }
 
-    if (items.has('signUp')) {
-      items.get('signUp').attrs.onclick = () => app.modal.show(SignUpModal);
+      items.add(
+        'signUp',
+        <Button className="Button Button--link" onclick={() => app.modal.show(SignUpModal)}>
+          {app.translator.trans('core.forum.header.sign_up_link')}
+        </Button>,
+        10
+      );
     }
 
-    if (items.has('logIn')) {
+    if (app.forum.attribute<boolean>('blomstra-web3.prioritize-web3-auth-modals') && items.has('logIn')) {
       items.get('logIn').attrs.onclick = () => app.modal.show(LogInModal);
     }
   });
