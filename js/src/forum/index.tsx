@@ -12,6 +12,7 @@ import LogInModal from './components/LogInModal';
 import ConnectWalletModal from './components/ConnectWalletModal';
 import SignUpModal from './components/SignUpModal';
 import Web3AccountsState from './states/Web3AccountsState';
+import AttachedWallets from './components/AttachedWallets';
 
 app.initializers.add('blomstra/web3', () => {
   app.store.models['web3-accounts'] = Web3Account;
@@ -20,23 +21,7 @@ app.initializers.add('blomstra/web3', () => {
 
   // Session button to bind web3 accounts to current user account.
   extend(SettingsPage.prototype, 'settingsItems', (items) => {
-    items.add(
-      'wallets',
-      <FieldSet className={`Settings-wallets`} label={app.translator.trans(`blomstra-web3.forum.settings.wallets_heading`)}>
-        <Button
-          icon="fas fa-wallet"
-          className="Button"
-          onclick={() =>
-            app.modal.show(ConnectWalletModal, {
-              username: app.session.user!.username(),
-            })
-          }
-        >
-          {app.translator.trans('blomstra-web3.forum.settings.wallet-connect-button')}
-        </Button>
-      </FieldSet>,
-      5
-    );
+    items.add('wallets', <AttachedWallets />, 5);
   });
 
   // Modify signup modal to add context to our login modal to be able to tell a login from a sigup.

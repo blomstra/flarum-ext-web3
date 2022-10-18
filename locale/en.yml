@@ -22,6 +22,7 @@ blomstra-web3:
     settings:
       wallets_heading: Wallets
       wallet-connect-button: Connect Wallet
+      unbind: Unbind from account
     log-in:
       with-wallet: Log in with web3 wallet
       select-wallet-account: => blomstra-web3.ref.select-wallet-account

@@ -1,0 +1,39 @@
+.AttachedWallets {
+  &-list {
+    display: grid;
+    grid-gap: 8px;
+  }
+
+  &-account {
+    --icon-size: 32px;
+    display: grid;
+    grid-template-columns: var(--icon-size) 1fr 1fr;
+    align-items: center;
+    grid-gap: 16px;
+    padding: 8px;
+    background-color: var(--control-bg);
+    border-radius: var(--border-radius);
+
+    img {
+      max-width: 100%;
+    }
+
+    &-actions {
+      margin-left: auto;
+    }
+
+    &-icon {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    &-address {
+      font-weight: bold;
+    }
+
+    &-wallet {
+      color: var(--control-color);
+    }
+  }
+}

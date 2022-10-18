@@ -22,7 +22,7 @@ export default class Web3AccountsState {
     return this.accounts !== null && this.accounts.some((account) => account.address() === address);
   }
 
-  all() {
+  all(): Web3Account[] | null {
     return this.accounts;
   }
 
