@@ -21,7 +21,7 @@ app.initializers.add('blomstra/web3', () => {
 
   // Session button to bind web3 accounts to current user account.
   extend(SettingsPage.prototype, 'settingsItems', (items) => {
-    items.add('wallets', <AttachedWallets />, 5);
+    items.add('wallets', <AttachedWallets />, 95);
   });
 
   // Modify signup modal to add context to our login modal to be able to tell a login from a sigup.
