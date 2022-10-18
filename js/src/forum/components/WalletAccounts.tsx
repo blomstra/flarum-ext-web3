@@ -1,7 +1,6 @@
 import Component, { ComponentAttrs } from 'flarum/common/Component';
 import Button from 'flarum/common/components/Button';
 import app from 'flarum/forum/app';
-import { Wallet, WalletAccount } from '../../shims';
 import Web3Account from '../models/Web3Account';
 import { stringToHex, u8aToHex } from '@polkadot/util';
 import { decodeAddress } from '@polkadot/util-crypto';
@@ -9,7 +8,7 @@ import classList from 'flarum/common/utils/classList';
 import Tooltip from 'flarum/common/components/Tooltip';
 import LoadingIndicator from 'flarum/common/components/LoadingIndicator';
 import type Mithril from 'mithril';
-import { WalletMethods } from '@subwallet/wallet-connect/types';
+import { Wallet, WalletAccount } from '@subwallet/wallet-connect/types';
 import RequestError from 'flarum/common/utils/RequestError';
 
 export interface IWalletAccountsAttrs extends ComponentAttrs {
@@ -31,7 +30,7 @@ export default class WalletAccounts<CustomAttrs extends IWalletAccountsAttrs = I
     if (this.accounts === null) {
       let accounts;
 
-      accounts = (this.attrs.wallet as WalletMethods).getAccounts();
+      accounts = this.attrs.wallet.getAccounts();
 
       accounts.then((accs) => {
         this.accounts = accs || [];

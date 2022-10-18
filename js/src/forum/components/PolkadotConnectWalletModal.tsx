@@ -24,12 +24,9 @@ export default class PolkadotConnectWalletModal<
   CustomAttrs extends IPolkadotConnectWalletModalAttrs = IPolkadotConnectWalletModalAttrs
 > extends Modal<CustomAttrs> {
   private selectedWallet: Wallet | null = null;
-  private attachedAccountsLoaded = false;
 
   oninit(vnode: Mithril.Vnode<CustomAttrs, this>) {
     super.oninit(vnode);
-
-    app.web3accounts.load();
   }
 
   className() {
@@ -105,7 +102,9 @@ export default class PolkadotConnectWalletModal<
   }
 
   selectedWalletView() {
-    if (!this.attachedAccountsLoaded) {
+    if (!app.web3accounts.loaded()) {
+      app.web3accounts.load();
+
       return <LoadingIndicator />;
     }
 

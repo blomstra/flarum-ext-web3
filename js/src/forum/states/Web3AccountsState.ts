@@ -13,6 +13,7 @@ export default class Web3AccountsState {
       this.accounts ??
       app.store.find<Web3Account[]>('web3/accounts').then((accounts) => {
         this.accounts = accounts;
+        m.redraw();
       })
     );
   }
