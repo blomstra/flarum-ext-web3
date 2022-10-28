@@ -12,7 +12,6 @@
     "baseUrl": ".",
     "paths": {
       "flarum/*": ["../vendor/flarum/core/js/dist-typings/*"]
-    },
-    "target": "es5"
+    }
   }
 }

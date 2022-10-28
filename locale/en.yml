@@ -2,6 +2,10 @@ blomstra-web3:
   admin:
     settings:
       allow-sign-up: Allow Signup with web3
+      infura-project-id: Infura Project ID
+      infura-project-id-help: >
+        Your Infura Project ID. You can get one from https://infura.io
+        Needed for the following wallets:
       prioritize-web3-auth-modals: Open web3 Login/Signup by default
 
   forum:

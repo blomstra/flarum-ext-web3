@@ -1,6 +1,6 @@
 import app from 'flarum/forum/app';
 import type Mithril from 'mithril';
-import Core, { default as Web3Modal, getProviderInfo } from 'web3modal';
+import Core, { getProviderInfo } from 'web3modal';
 import Modal from 'flarum/common/components/Modal';
 import Button from 'flarum/common/components/Button';
 import { u8aToHex } from '@polkadot/util';
@@ -8,6 +8,7 @@ import { decodeAddress } from '@polkadot/util-crypto';
 import LoadingIndicator from 'flarum/common/components/LoadingIndicator';
 import { IConnectWalletModalAttrs } from './ConnectWalletModal';
 import Web3Account from '../models/Web3Account';
+import getProvider from '../utils/getProvider';
 
 // import { W3mModal, W3mConnectButton } from '@web3modal/ui';
 // import { ClientCtrl, ConfigCtrl, ConfigOptions } from '@web3modal/core';
@@ -164,22 +165,10 @@ export default class EvmConnectWalletModal<CustomAttrs extends IEvmConnectWallet
       return this.provider;
     }
 
-    const providerOptions = {
-      // walletconnect: {
-      //   package: WallectConnectProvider,
-      //   options: {
-      //     infuraId: '8378c39d804147dea2a3aebb737fb9a8',
-      //   },
-      // },
-    };
-
-    const web3Modal = new Web3Modal({
-      providerOptions,
-    });
-
-    const provider = await web3Modal.connect();
+    const [provider, web3Modal] = await getProvider();
 
     provider.on('accountsChanged', (accounts: string[]) => {
+      // @TODO: Handle account change
       console.log(accounts);
     });
 

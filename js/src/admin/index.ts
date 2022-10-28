@@ -14,5 +14,11 @@ app.initializers.add('blomstra/web3', () => {
       setting: 'blomstra-web3.allow-sign-up',
       type: 'switch',
       label: app.translator.trans('blomstra-web3.admin.settings.allow-sign-up'),
+    })
+    .registerSetting({
+      setting: 'blomstra-web3.infura-project-id',
+      type: 'text',
+      label: app.translator.trans('blomstra-web3.admin.settings.infura-project-id'),
+      help: app.translator.trans('blomstra-web3.admin.settings.infura-project-id-help'),
     });
 });
