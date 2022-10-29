@@ -80385,7 +80385,7 @@ var require_dist9 = __commonJS({
   }
 });
 
-// build/web3.js
+// scripts/web3.js
 init_virtual_process_polyfill();
 init_buffer();
 
@@ -84428,7 +84428,7 @@ function getWalletBySource(source) {
   });
 }
 
-// build/web3.js
+// scripts/web3.js
 var import_wallet_sdk = __toESM(require_dist4());
 
 // node_modules/@walletconnect/web3-provider/dist/esm/index.js
@@ -87254,7 +87254,7 @@ var WalletConnectProvider = class extends ProviderEngine {
 };
 var esm_default6 = WalletConnectProvider;
 
-// build/web3.js
+// scripts/web3.js
 var import_web3modal = __toESM(require_dist9());
 var export_CoinbaseWalletProvider = import_wallet_sdk.CoinbaseWalletProvider;
 var export_CoinbaseWalletSDK = import_wallet_sdk.CoinbaseWalletSDK;

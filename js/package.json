@@ -15,9 +15,9 @@
   },
   "scripts": {
     "dev": "webpack --mode development --watch",
-    "build": "yarn build:dist && yarn build:providers",
+    "build": "yarn build:dist && yarn build:web3",
     "build:dist": "webpack --mode production",
-    "build:providers": "./build/providers.js",
+    "build:web3": "./scripts/build.js",
     "format": "prettier --write src",
     "format-check": "prettier --check src"
   },
