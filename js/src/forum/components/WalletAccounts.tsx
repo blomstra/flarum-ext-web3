@@ -1,15 +1,13 @@
 import Component, { ComponentAttrs } from 'flarum/common/Component';
 import Button from 'flarum/common/components/Button';
 import app from 'flarum/forum/app';
-import Web3Account from '../models/Web3Account';
-import { stringToHex, u8aToHex } from '@polkadot/util';
-import { decodeAddress } from '@polkadot/util-crypto';
 import classList from 'flarum/common/utils/classList';
 import Tooltip from 'flarum/common/components/Tooltip';
 import LoadingIndicator from 'flarum/common/components/LoadingIndicator';
+import Web3Account from '../models/Web3Account';
+import type { Wallet, WalletAccount } from '@subwallet/wallet-connect/types';
+import type RequestError from 'flarum/common/utils/RequestError';
 import type Mithril from 'mithril';
-import { Wallet, WalletAccount } from '@subwallet/wallet-connect/types';
-import RequestError from 'flarum/common/utils/RequestError';
 
 export interface IWalletAccountsAttrs extends ComponentAttrs {
   username: string;
@@ -57,7 +55,9 @@ export default class WalletAccounts<CustomAttrs extends IWalletAccountsAttrs = I
     );
   }
 
-  accountView(account: WalletAccount, accountIndex: number) {
+  async accountView(account: WalletAccount, accountIndex: number) {
+    const { u8aToHex, decodeAddress } = await app.web3.all();
+
     const isAttached = app.web3accounts.exists(u8aToHex(decodeAddress(account.address)));
 
     let bindMessage = 'blomstra-web3.forum.polkadot-connect-wallet-modal.';
@@ -108,6 +108,8 @@ export default class WalletAccounts<CustomAttrs extends IWalletAccountsAttrs = I
     await wallet.enable();
 
     if (wallet.signer) {
+      const { stringToHex, u8aToHex, decodeAddress } = await app.web3.all();
+
       try {
         const signer = wallet.signer;
 
@@ -153,6 +155,7 @@ export default class WalletAccounts<CustomAttrs extends IWalletAccountsAttrs = I
   }
 
   async disconnectAccount(address: string) {
+    const { u8aToHex, decodeAddress } = await app.web3.all();
     address = u8aToHex(decodeAddress(address));
     await app.store.getBy<Web3Account>('web3-accounts', 'address', address)?.delete();
     app.web3accounts.remove(address);

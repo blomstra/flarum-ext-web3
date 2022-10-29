@@ -33,6 +33,7 @@
     "browserify": "^17.0.0",
     "buffer": "^6.0.3",
     "esbuild": "^0.15.12",
+    "esbuild-plugin-svgr": "^1.0.1",
     "node-polyfill-webpack-plugin": "^2.0.1",
     "svg-url-loader": "^7.1.1",
     "web3modal": "^1.9.9"

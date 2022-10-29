@@ -12,10 +12,12 @@ import Web3AccountsState from './states/Web3AccountsState';
 import AttachedWallets from './components/AttachedWallets';
 import HeaderSecondary from 'flarum/forum/components/HeaderSecondary';
 import Button from 'flarum/common/components/Button';
+import Web3ModulesState from './states/Web3ModulesState';
 
 app.initializers.add('blomstra/web3', () => {
   app.store.models['web3-accounts'] = Web3Account;
 
+  app.web3 = new Web3ModulesState();
   app.web3accounts = new Web3AccountsState();
 
   // Session button to bind web3 accounts to current user account.

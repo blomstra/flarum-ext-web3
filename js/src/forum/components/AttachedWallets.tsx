@@ -1,20 +1,23 @@
 import Component from 'flarum/common/Component';
 import app from 'flarum/forum/app';
 import Button from 'flarum/common/components/Button';
-import ConnectWalletModal from './ConnectWalletModal';
 import FieldSet from 'flarum/common/components/FieldSet';
-import Web3Account from '../models/Web3Account';
 import LoadingIndicator from 'flarum/common/components/LoadingIndicator';
-import { getProviderInfoByName, IProviderInfo } from 'web3modal';
-import { getWalletBySource } from '@subwallet/wallet-connect/dotsama/wallets';
-import { WalletInfo } from '@subwallet/wallet-connect/types';
-import { hexToU8a } from '@polkadot/util';
-import { encodeAddress } from '@polkadot/util-crypto';
 import Tooltip from 'flarum/common/components/Tooltip';
 import extractText from 'flarum/common/utils/extractText';
+import ConnectWalletModal from './ConnectWalletModal';
+import Web3Account from '../models/Web3Account';
+import type { IProviderInfo } from 'web3modal';
+import type { WalletInfo } from '@subwallet/wallet-connect/types';
 
 export default class AttachedWallets extends Component {
   view() {
+    if (!app.web3.loaded) {
+      app.web3.load().then(() => m.redraw());
+
+      return <LoadingIndicator />;
+    }
+
     return (
       <FieldSet className={`Settings-wallets`} label={app.translator.trans(`blomstra-web3.forum.settings.wallets_heading`)}>
         {this.listAccountsView()}
@@ -51,6 +54,9 @@ export default class AttachedWallets extends Component {
 
   accountView(account: Web3Account) {
     const isEth = account.type() === 'eth';
+
+    const { getProviderInfoByName, getWalletBySource, encodeAddress, hexToU8a } = app.web3.loadedModules();
+
     const providerInfo = isEth ? getProviderInfoByName(account.source()) : getWalletBySource(account.source());
 
     const logoSrc = isEth ? providerInfo?.logo : (providerInfo as WalletInfo)?.logo.src;

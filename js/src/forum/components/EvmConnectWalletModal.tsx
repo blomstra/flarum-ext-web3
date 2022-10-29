@@ -1,15 +1,12 @@
 import app from 'flarum/forum/app';
-import type Mithril from 'mithril';
-import { getProviderInfo } from 'web3modal';
-import type Core from 'web3modal';
 import Modal from 'flarum/common/components/Modal';
 import Button from 'flarum/common/components/Button';
-import { u8aToHex } from '@polkadot/util';
-import { decodeAddress } from '@polkadot/util-crypto';
 import LoadingIndicator from 'flarum/common/components/LoadingIndicator';
 import { IConnectWalletModalAttrs } from './ConnectWalletModal';
 import Web3Account from '../models/Web3Account';
 import getProvider from '../utils/getProvider';
+import type Core from 'web3modal';
+import type Mithril from 'mithril';
 
 // import { W3mModal, W3mConnectButton } from '@web3modal/ui';
 // import { ClientCtrl, ConfigCtrl, ConfigOptions } from '@web3modal/core';
@@ -114,6 +111,8 @@ export default class EvmConnectWalletModal<CustomAttrs extends IEvmConnectWallet
         params: [this.currentAddress, this.attrs.username],
       });
 
+      const { getProviderInfo } = await app.web3.all();
+
       const type = 'eth';
       const source = getProviderInfo(provider).name;
 
@@ -157,6 +156,7 @@ export default class EvmConnectWalletModal<CustomAttrs extends IEvmConnectWallet
     const address = this.currentAddress;
 
     if (unbind) {
+      const { u8aToHex, decodeAddress } = await app.web3.all();
       await app.web3accounts.remove(u8aToHex(decodeAddress(address)));
     }
 
