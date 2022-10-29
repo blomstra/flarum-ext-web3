@@ -4,7 +4,6 @@
 
 const GlobalsPolyfills = require('@esbuild-plugins/node-globals-polyfill').default;
 const NodeModulesPolyfills = require('@esbuild-plugins/node-modules-polyfill').default;
-const svgrPlugin = require('esbuild-plugin-svgr');
 
 require('esbuild')
   .build({
