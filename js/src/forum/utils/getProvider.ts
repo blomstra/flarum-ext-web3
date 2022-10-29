@@ -13,16 +13,14 @@ export default async function getProvider() {
 
   return import(
     `${app.forum.attribute('baseUrl')}/assets/extensions/blomstra-web3/web3-providers.js` /* webpackIgnore: true, webpackPrefetch: true */
-  ).then(async () => {
-    const { CoinbaseWalletSDK /*, WalletConnectProvider*/ } = window;
-
+  ).then(async ({ CoinbaseWalletSDK, WalletConnectProvider }) => {
     const providerOptions = {
-      // walletconnect: {
-      //   package: WalletConnectProvider,
-      //   options: {
-      //     infuraId: INFURA_ID,
-      //   },
-      // },
+      walletconnect: {
+        package: WalletConnectProvider,
+        options: {
+          infuraId: INFURA_ID,
+        },
+      },
       coinbasewallet: {
         package: CoinbaseWalletSDK,
         options: {
