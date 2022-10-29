@@ -24,7 +24,10 @@ return [
 
     (new Extend\Frontend('admin'))
         ->js(__DIR__.'/js/dist/admin.js')
-        ->css(__DIR__.'/less/admin.less'),
+        ->css(__DIR__.'/less/admin.less')
+        ->content(function (Document $document) {
+            $document->payload['ffiEnabled'] = ffiIsEnabled();
+        }),
 
     new Extend\Locales(__DIR__.'/locale'),
 

@@ -5,8 +5,10 @@ blomstra-web3:
       infura-project-id: Infura Project ID
       infura-project-id-help: >
         Your Infura Project ID. You can get one from https://infura.io
-        Needed for the following wallets:
+        Needed for the following wallets: Coinbase, WalletConnect.
       prioritize-web3-auth-modals: Open web3 Login/Signup by default
+      ffi-disabled: >
+        The PHP FFI extension is not enabled. Dotsama wallets will not work.
 
   forum:
     connect-wallet-modal:
