@@ -7,6 +7,7 @@
   "include": ["src/**/*", "../vendor/flarum/core/js/dist-typings/@types/**/*"],
   "files": ["src/shims.d.ts"],
   "compilerOptions": {
+    "module": "ESNext",
     // This will output typings to `dist-typings`
     "declarationDir": "./dist-typings",
     "baseUrl": ".",

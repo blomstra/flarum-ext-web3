@@ -21,6 +21,7 @@ Install with composer:
 
 ```sh
 composer require blomstra/web3:"*"
+php flarum assets:publish
 ```
 
 ## Updating
@@ -29,6 +30,7 @@ composer require blomstra/web3:"*"
 composer update blomstra/web3
 php flarum migrate
 php flarum cache:clear
+php flarum assets:publish
 ```
 
 ## Links

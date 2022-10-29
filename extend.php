@@ -15,11 +15,15 @@ use Blomstra\Web3\Exception\InvalidSignatureException;
 use Blomstra\Web3\Query\Web3AccountFilterer;
 use Fig\Http\Message\StatusCodeInterface;
 use Flarum\Extend;
+use Flarum\Frontend\Document;
 
 return [
     (new Extend\Frontend('forum'))
         ->js(__DIR__.'/js/dist/forum.js')
-        ->css(__DIR__.'/less/forum.less'),
+        ->css(__DIR__.'/less/forum.less')
+        ->content(function (Document $document) {
+            $document->head[] = '<script>var exports = {};</script>';
+        }),
 
     (new Extend\Frontend('admin'))
         ->js(__DIR__.'/js/dist/admin.js')
@@ -53,4 +57,5 @@ return [
         ->default('blomstra-web3.allow-sign-up', 1)
         ->serializeToForum('blomstra-web3.allow-sign-up', 'blomstra-web3.allow-sign-up', 'boolval')
         ->serializeToForum('blomstra-web3.prioritize-web3-auth-modals', 'blomstra-web3.prioritize-web3-auth-modals', 'boolval')
+        ->serializeToForum('blomstra-web3.infura-project-id', 'blomstra-web3.infura-project-id'),
 ];

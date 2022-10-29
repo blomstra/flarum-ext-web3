@@ -7,6 +7,9 @@ use Flarum\Http\AccessToken;
 use Flarum\Testing\integration\RetrievesAuthorizedUsers;
 use Flarum\Testing\integration\TestCase;
 
+/**
+ * @TODO allow-sign-up setting logic tests
+ */
 class SignupTest  extends TestCase
 {
     use RetrievesAuthorizedUsers;
