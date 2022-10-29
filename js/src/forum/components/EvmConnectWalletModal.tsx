@@ -1,6 +1,7 @@
 import app from 'flarum/forum/app';
 import type Mithril from 'mithril';
-import Core, { getProviderInfo } from 'web3modal';
+import { getProviderInfo } from 'web3modal';
+import type Core from 'web3modal';
 import Modal from 'flarum/common/components/Modal';
 import Button from 'flarum/common/components/Button';
 import { u8aToHex } from '@polkadot/util';
@@ -45,7 +46,7 @@ export interface IEvmConnectWalletModalAttrs extends IConnectWalletModalAttrs {}
 
 export default class EvmConnectWalletModal<CustomAttrs extends IEvmConnectWalletModalAttrs = IEvmConnectWalletModalAttrs> extends Modal<CustomAttrs> {
   private web3Modal!: Core;
-  private provider!: any;
+  private provider?: any;
   private currentAddress?: string;
 
   oninit(vnode: Mithril.Vnode<CustomAttrs, this>) {
@@ -64,15 +65,17 @@ export default class EvmConnectWalletModal<CustomAttrs extends IEvmConnectWallet
 
   content() {
     if (!this.currentAddress) {
-      this.getProvider().then(async (provider) => {
-        try {
-          this.currentAddress = (await provider.request({ method: 'eth_requestAccounts' }))[0];
-        } catch (error) {
-          app.modal.close();
-        }
+      this.getProvider()
+        .then(async (provider) => {
+          try {
+            this.currentAddress = (await provider.request({ method: 'eth_requestAccounts' }))[0];
+          } catch (error) {
+            app.modal.close();
+          }
 
-        m.redraw();
-      });
+          m.redraw();
+        })
+        .catch(() => app.modal.close());
 
       return <LoadingIndicator />;
     }
@@ -103,7 +106,7 @@ export default class EvmConnectWalletModal<CustomAttrs extends IEvmConnectWallet
   }
 
   async bind() {
-    const provider = await this.getProvider();
+    const provider = this.provider;
 
     try {
       const signature = await provider.request({
@@ -143,9 +146,9 @@ export default class EvmConnectWalletModal<CustomAttrs extends IEvmConnectWallet
   }
 
   async disconnect(unbind: boolean) {
-    const provider = await this.getProvider();
+    const provider = this.provider;
 
-    if (provider.close) {
+    if (provider?.close) {
       await provider.close();
 
       await this.web3Modal.clearCachedProvider();
@@ -157,22 +160,20 @@ export default class EvmConnectWalletModal<CustomAttrs extends IEvmConnectWallet
       await app.web3accounts.remove(u8aToHex(decodeAddress(address)));
     }
 
-    app.modal.close();
+    delete this.currentAddress;
   }
 
   async getProvider() {
-    if (this.provider) {
-      return this.provider;
+    if (!this.web3Modal) {
+      this.web3Modal = await getProvider();
     }
 
-    const [provider, web3Modal] = await getProvider();
+    const provider = await this.web3Modal.connect();
 
     provider.on('accountsChanged', (accounts: string[]) => {
-      // @TODO: Handle account change
-      console.log(accounts);
+      this.currentAddress = accounts[0];
+      m.redraw();
     });
-
-    this.web3Modal = web3Modal;
 
     return (this.provider = provider);
   }

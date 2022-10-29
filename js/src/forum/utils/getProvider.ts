@@ -37,12 +37,8 @@ export default async function getProvider() {
       },
     };
 
-    const web3Modal = new Web3Modal({
+    return new Web3Modal({
       providerOptions,
     });
-
-    const provider = await web3Modal.connect();
-
-    return [provider, web3Modal];
   });
 }
