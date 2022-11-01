@@ -37,6 +37,11 @@ export default class PolkadotConnectWalletModal<
   }
 
   content() {
+    if (!app.web3.loaded) {
+      app.web3.load().then(() => m.redraw());
+      return <LoadingIndicator />;
+    }
+
     return (
       <div className="Modal-body">
         <div className="Form">{this.selectedWallet ? this.selectedWalletView() : this.walletSelectionView()}</div>
@@ -44,14 +49,14 @@ export default class PolkadotConnectWalletModal<
     );
   }
 
-  async walletSelectionView() {
-    return (await this.walletKindItems()).toArray();
+  walletSelectionView() {
+    return this.walletKindItems().toArray();
   }
 
-  async walletKindItems() {
+  walletKindItems() {
     const items = new ItemList<Mithril.Children>();
 
-    const { getDotsamaWallets } = await app.web3.all();
+    const { getDotsamaWallets } = app.web3.loadedModules();
 
     const wallets: WalletKind = {
       key: 'polkadot',
@@ -77,7 +82,7 @@ export default class PolkadotConnectWalletModal<
 
   walletView(wallet: Wallet, walletIndex: number = 0) {
     const Tag = wallet.installed ? Button : Link;
-    let attrs: ComponentAttrs = {};
+    let attrs: ComponentAttrs;
 
     if (!wallet.installed) {
       attrs = {
@@ -103,12 +108,6 @@ export default class PolkadotConnectWalletModal<
   }
 
   selectedWalletView() {
-    if (!app.web3accounts.loaded()) {
-      app.web3accounts.load();
-
-      return <LoadingIndicator />;
-    }
-
     return (
       <WalletAccounts
         username={this.attrs.username}
