@@ -17,6 +17,8 @@
 **/js/dist/**/* linguist-generated
 **/js/dist-typings/**/* -diff
 **/js/dist-typings/**/* linguist-generated
+**/assets/**/*.js -diff
+**/assets/**/*.js linguist-generated
 **/js/yarn.lock -diff
 **/js/package-lock.json -diff
 
