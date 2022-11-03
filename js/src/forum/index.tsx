@@ -54,6 +54,8 @@ app.initializers.add('blomstra/web3', () => {
 
   // Open Web3 Auth Modals by default
   extend(HeaderSecondary.prototype, 'items', function (items) {
+    if (app.session.user) return;
+
     if (
       (app.forum.attribute<boolean>('blomstra-web3.prioritize-web3-auth-modals') && app.forum.attribute<boolean>('blomstra-web3.allow-sign-up')) ||
       (app.forum.attribute<boolean>('blomstra-web3.allow-sign-up') && !app.forum.attribute<boolean>('allowSignUp'))
