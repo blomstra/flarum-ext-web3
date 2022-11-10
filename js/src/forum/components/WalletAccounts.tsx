@@ -20,17 +20,9 @@ export default class WalletAccounts<CustomAttrs extends IWalletAccountsAttrs = I
   private accounts: WalletAccount[] | null = null;
   private loading = false;
 
-  oninit(vnode: Mithril.Vnode<CustomAttrs, this>) {
-    super.oninit(vnode);
-  }
-
   view() {
     if (this.accounts === null) {
-      let accounts;
-
-      accounts = this.attrs.wallet.getAccounts();
-
-      accounts.then((accs) => {
+      this.attrs.wallet.getAccounts().then((accs) => {
         this.accounts = accs || [];
         m.redraw();
       });
@@ -55,8 +47,8 @@ export default class WalletAccounts<CustomAttrs extends IWalletAccountsAttrs = I
     );
   }
 
-  async accountView(account: WalletAccount, accountIndex: number) {
-    const { u8aToHex, decodeAddress } = await app.web3.all();
+  accountView(account: WalletAccount, accountIndex: number) {
+    const { u8aToHex, decodeAddress } = app.web3.loadedModules();
 
     const isAttached = app.web3accounts.exists(u8aToHex(decodeAddress(account.address)));
 
