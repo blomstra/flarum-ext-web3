@@ -158,8 +158,7 @@ export default class EvmConnectWalletModal<CustomAttrs extends IEvmConnectWallet
     const address = this.currentAddress;
 
     if (unbind) {
-      const { u8aToHex, decodeAddress } = await app.web3.all();
-      await app.web3accounts.remove(u8aToHex(decodeAddress(address)));
+      await app.web3accounts.remove(address!);
     }
 
     delete this.currentAddress;
