@@ -108,7 +108,7 @@ export default class EvmConnectWalletModal<CustomAttrs extends IEvmConnectWallet
     try {
       const signature = await provider.request({
         method: 'personal_sign',
-        params: [this.currentAddress, this.attrs.username],
+        params: [this.attrs.username, this.currentAddress],
       });
 
       const { getProviderInfo } = await app.web3.all();
