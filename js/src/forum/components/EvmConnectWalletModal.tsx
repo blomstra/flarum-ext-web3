@@ -44,6 +44,7 @@ export interface IEvmConnectWalletModalAttrs extends IConnectWalletModalAttrs {}
 export default class EvmConnectWalletModal<CustomAttrs extends IEvmConnectWalletModalAttrs = IEvmConnectWalletModalAttrs> extends Modal<CustomAttrs> {
   private web3Modal!: Core;
   private provider?: any;
+  private __providerName?: string;
   private currentAddress?: string;
 
   oninit(vnode: Mithril.Vnode<CustomAttrs, this>) {
@@ -114,7 +115,8 @@ export default class EvmConnectWalletModal<CustomAttrs extends IEvmConnectWallet
       const { getProviderInfo } = await app.web3.all();
 
       const type = 'eth';
-      const source = getProviderInfo(provider).name;
+      // Special handling required for binance wallet as it doesn't identify itself with a check of `isBinanceWallet`
+      const source = this.__providerName === 'binancechainwallet' ? 'Binance Chain' : getProviderInfo(provider).name;
 
       if (app.session.user) {
         // Submit account to the backend
@@ -167,6 +169,10 @@ export default class EvmConnectWalletModal<CustomAttrs extends IEvmConnectWallet
     if (!this.web3Modal) {
       this.web3Modal = await getProvider();
     }
+
+    this.web3Modal.on('select', (providerName: string) => {
+      this.__providerName = providerName;
+    });
 
     const provider = await this.web3Modal.connect();
 
