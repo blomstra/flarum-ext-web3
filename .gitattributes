@@ -8,7 +8,8 @@
 **/.editorconfig export-ignore
 **/.styleci.yml export-ignore
 **/js/src export-ignore
-**/rs export-ignore
+**/rs/src export-ignore
+**/rs/*.* export-ignore
 
 **/phpunit.xml export-ignore
 **/tests export-ignore
