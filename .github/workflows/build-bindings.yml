@@ -1,0 +1,49 @@
+name: Build Bindings
+
+on: [workflow_dispatch, push, pull_request]
+
+jobs:
+  files-changed:
+    runs-on: ubuntu-latest
+    outputs:
+      changed: ${{ steps.files.outputs.changed }}
+    steps:
+      - uses: actions/checkout@v2
+      - uses: dorny/paths-filter@v2
+        id: files
+        with:
+          filters: |
+            changed:
+              - 'rs/**'
+              - '.github/workflows/build-bindings.yml'
+
+  build:
+    # run only if some file in 'src' folder was changed
+    if: needs.files-changed.outputs.changed == 'true'
+    strategy:
+      matrix:
+        include:
+          - name: "Linux"
+            os: ubuntu-latest
+
+    name: ${{ matrix.name }}
+    runs-on: ${{ matrix.os }}
+    steps:
+    - uses: actions/checkout@v2
+    - uses: actions-rs/toolchain@v1
+      with:
+        toolchain: stable
+        override: true
+    - uses: actions-rs/cargo@v1
+      with:
+        use-cross: true
+        command: build
+        args: --release --manifest-path rs/Cargo.toml
+    - run: |
+        git config --global user.name "github-actions[bot]"
+        git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
+        git status
+        git pull
+        git add rs/target/*/release/libschnorrkelcbindings.* -f
+        git commit -m "Build bindings for ${{ matrix.name }} for commit ${{ github.sha }}"
+        git push

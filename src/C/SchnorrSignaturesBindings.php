@@ -11,12 +11,32 @@ class SchnorrSignaturesBindings
 
     protected FFI $ffi;
 
+    /**
+     * @throws \Exception
+     */
     public function __construct()
     {
         $this->ffi = FFI::cdef(
             file_get_contents(self::RUST_DIST_DIR . "/libschnorrkelcbindings.h"),
-            self::RUST_DIST_DIR . '/libschnorrkelcbindings.so'
+            $this->getBinaryPath()
         );
+    }
+
+    /**
+     * @throws \Exception
+     */
+    private function getBinaryPath(): string
+    {
+        $targetDir = __DIR__ . '/../../rs/target';
+
+        match (PHP_OS_FAMILY) {
+            'Linux' => $binary = "$targetDir/x86_64-unknown-linux-gnu/release/libschnorrkelcbindings.so",
+            // 'Darwin' => $binary = 'libschnorrkelcbindings.dylib',
+            // 'Windows' => $binary = 'libschnorrkelcbindings.dll',
+            default => throw new \Exception('Unsupported OS'),
+        };
+
+        return $binary;
     }
 
     /**

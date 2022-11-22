@@ -1,0 +1,1 @@
+/target/x86_64-unknown-linux-gnu/release/libschnorrkelcbindings.so: /home/runner/work/flarum-ext-web3/flarum-ext-web3/rs/build.rs /home/runner/work/flarum-ext-web3/flarum-ext-web3/rs/src/lib.rs /home/runner/work/flarum-ext-web3/flarum-ext-web3/rs/src/sr25519.rs

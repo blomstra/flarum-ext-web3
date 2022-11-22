@@ -22,6 +22,16 @@ class PolkadotSignatureVerifier implements SignedMessageVerifier
             return false;
         }
 
-        return (new SchnorrSignaturesBindings())->verifySignature($signature, "<Bytes>$message</Bytes>", $publicKey);
+        try {
+            $bindings = new SchnorrSignaturesBindings();
+        } catch (\Throwable $e) {
+            $this->logger->error('Could not load FFI bindings for Polkadot signature verification.', [
+                'exception' => $e,
+            ]);
+
+            return false;
+        }
+
+        return $bindings->verifySignature($signature, "<Bytes>$message</Bytes>", $publicKey);
     }
 }
