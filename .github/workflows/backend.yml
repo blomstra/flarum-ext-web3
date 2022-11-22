@@ -4,7 +4,7 @@ on: [workflow_dispatch, push, pull_request]
 
 jobs:
   run:
-    uses: ./.github/workflows/reusable.yml
+    uses: flarum/framework/.github/workflows/REUSABLE_backend.yml@main
     with:
       enable_backend_testing: true
 
@@ -12,4 +12,3 @@ jobs:
       php_versions: '["8.0", "8.1"]'
       php_extensions: curl, dom, gd, json, mbstring, openssl, pdo_mysql, tokenizer, zip, gmp, FFI
       php_ini_values: error_reporting=E_ALL, ffi.enable=true
-      operating_systems: '["ubuntu-latest", "debian-latest"]'
