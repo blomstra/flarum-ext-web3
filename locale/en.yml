@@ -44,11 +44,11 @@ blomstra-web3:
       unbind_confirm: Are you sure you want to unbind this address from your account?
     log-in:
       basic-login-link: Switch to basic Login
-      with-wallet: Log in with web3 wallet
+      with-wallet: Log in with web3
       select-wallet-account: => blomstra-web3.ref.select-wallet-account
     sign-up:
       basic-signup-link: Switch to basic Signup
-      with-wallet: Sign up with web3 wallet
+      with-wallet: Sign up with web3
       select-wallet-account: => blomstra-web3.ref.select-wallet-account
 
   ref:

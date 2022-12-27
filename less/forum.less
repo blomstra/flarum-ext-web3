@@ -5,3 +5,13 @@
 .web3modal-modal-lightbox {
   z-index: calc(~"var(--zindex-modal) + 200") !important;
 }
+
+@web3Color: #a59789;
+
+.LogInButton--web3 {
+  --button-color: #fff;
+  --button-bg: @web3Color;
+  --button-bg-hover: darken(@web3Color, 10%);
+  --button-bg-active: darken(@web3Color, 20%);
+  --button-bg-disabled: darken(@web3Color, 20%);
+}
