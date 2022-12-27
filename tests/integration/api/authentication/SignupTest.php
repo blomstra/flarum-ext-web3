@@ -6,6 +6,7 @@ use Blomstra\Web3\C\SchnorrSignaturesBindings;
 use Flarum\Http\AccessToken;
 use Flarum\Testing\integration\RetrievesAuthorizedUsers;
 use Flarum\Testing\integration\TestCase;
+use Flarum\User\User;
 
 /**
  * @TODO allow-sign-up setting logic tests
@@ -117,5 +118,40 @@ class SignupTest  extends TestCase
         // The response body should contain an error code
         $body = (string) $response->getBody();
         $this->assertJson($body);
+    }
+
+    /** @test */
+    public function can_signup_without_email()
+    {
+        $this->setting('blomstra-web3.signup-with-email', false);
+
+        $sr = new SchnorrSignaturesBindings();
+        $pair = $sr->pairFromSeed('dac7959dbae72f052e5a0c3c8d6530f202b02fd8f9f5ca1580ec8deb7797479e');
+        $signature = $sr->sign($pair[1], $pair[0], "<Bytes>potat</Bytes>");
+
+        $response = $this->send(
+            $this->requestWithCsrfToken(
+                $this->request('POST', '/web3/register', [
+                    'json' => [
+                        'username' => 'potat',
+                        'address' => '0x'.$pair[1],
+                        'signature' => '0x'.$signature,
+                        'source' => 'polkadot-js',
+                        'type' => 'sr25519',
+                    ]
+                ])
+            )
+        );
+
+        $this->assertEquals(201, $response->getStatusCode());
+
+        $body = (string) $response->getBody();
+        $this->assertJson($body);
+        $userId = json_decode($body, true)['data']['id'];
+
+        // Assert that the user's email was set to confirmed
+        $this->assertTrue(
+            (bool) User::query()->findOrFail($userId)->is_email_confirmed
+        );
     }
 }

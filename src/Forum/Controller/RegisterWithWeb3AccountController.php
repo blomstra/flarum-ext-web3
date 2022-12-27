@@ -10,6 +10,7 @@
 namespace Blomstra\Web3\Forum\Controller;
 
 use Flarum\Api\Client;
+use Flarum\Foundation\Config;
 use Flarum\Http\RememberAccessToken;
 use Flarum\Http\Rememberer;
 use Flarum\Http\SessionAuthenticator;
@@ -19,6 +20,7 @@ use Flarum\User\RegistrationToken;
 use Flarum\User\User;
 use Illuminate\Database\ConnectionInterface;
 use Illuminate\Support\Arr;
+use Illuminate\Support\Str;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Psr\Http\Server\RequestHandlerInterface;
@@ -31,7 +33,8 @@ class RegisterWithWeb3AccountController implements RequestHandlerInterface
         protected SessionAuthenticator $authenticator,
         protected Rememberer $rememberer,
         protected ConnectionInterface $db,
-        protected SettingsRepositoryInterface $settings
+        protected SettingsRepositoryInterface $settings,
+        protected Config $config
     ) {}
 
     public function handle(Request $request): ResponseInterface
@@ -44,6 +47,8 @@ class RegisterWithWeb3AccountController implements RequestHandlerInterface
 
         $this->db->beginTransaction();
 
+        $signUpWithEmail = $this->settings->get('blomstra-web3.signup-with-email');
+
         try {
             // Create registration token.
             $token = RegistrationToken::generate('', '', [], []);
@@ -53,6 +58,16 @@ class RegisterWithWeb3AccountController implements RequestHandlerInterface
             // So we temporarily make sure it's ON.
             $initialAllowSignUpValue = $this->settings->get('allow_sign_up');
             $this->settings->set('allow_sign_up', true);
+
+            if (! $signUpWithEmail) {
+                $domain = parse_url($this->config['url'], PHP_URL_HOST);
+                $random = Str::random();
+                $data['email'] = $random.'@users.noreply.'.$domain;
+
+                if (! filter_var($data['email'], FILTER_VALIDATE_EMAIL)) {
+                    $data['email'] = $random.'@users.noreply.machine.local';
+                }
+            }
 
             $response = $this->api
                 ->withParentRequest($request)
@@ -65,6 +80,14 @@ class RegisterWithWeb3AccountController implements RequestHandlerInterface
                     ]
                 ])
                 ->post('/users');
+
+            // Manually confirm the email if it was auto-generated.
+            if (! $signUpWithEmail) {
+                /** @var User $user */
+                $user = User::query()->where('email', $data['email'])->first();
+                $user->is_email_confirmed = true;
+                $user->save();
+            }
 
             // Reset `allow_sign_up`
             $this->settings->set('allow_sign_up', $initialAllowSignUpValue);

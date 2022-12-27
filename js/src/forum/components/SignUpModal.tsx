@@ -23,11 +23,17 @@ export default class SignUpModal extends BaseSignUpModal {
   fields(): ItemList<unknown> {
     const items = super.fields();
 
+    const signUpWithEmail = app.forum.attribute<boolean>('blomstra-web3.signup-with-email');
+
     items.remove('password');
+
+    if (!signUpWithEmail) {
+      items.remove('email');
+    }
 
     items.setContent(
       'submit',
-      <Button className="Button Button--block Button--primary" type="submit" disabled={!this.username() || !this.email()}>
+      <Button className="Button Button--block Button--primary" type="submit" disabled={!this.username() || (!this.email() && signUpWithEmail)}>
         {app.translator.trans('blomstra-web3.forum.sign-up.select-wallet-account', {
           rightArrow: icon('fas fa-arrow-right'),
         })}

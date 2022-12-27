@@ -13,12 +13,25 @@ import AttachedWallets from './components/AttachedWallets';
 import HeaderSecondary from 'flarum/forum/components/HeaderSecondary';
 import Button from 'flarum/common/components/Button';
 import Web3ModulesState from './states/Web3ModulesState';
+import alertNoEmail from './components/alertNoEmail';
+import IndexPage from 'flarum/forum/components/IndexPage';
+import User from 'flarum/common/models/User';
+import Model from 'flarum/common/Model';
 
 app.initializers.add('blomstra/web3', () => {
   app.store.models['web3-accounts'] = Web3Account;
 
   app.web3 = new Web3ModulesState();
   app.web3accounts = new Web3AccountsState();
+
+  // @ts-ignore
+  User.prototype.isEmailFake = Model.attribute<boolean>('isEmailFake');
+
+  extend(HeaderSecondary.prototype, 'oncreate', () => {
+    if (app.session.user) {
+      alertNoEmail(app);
+    }
+  });
 
   // Session button to bind web3 accounts to current user account.
   extend(SettingsPage.prototype, 'settingsItems', (items) => {

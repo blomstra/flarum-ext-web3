@@ -30,6 +30,16 @@ app.initializers.add('blomstra/web3', () => {
       label: app.translator.trans('blomstra-web3.admin.settings.allow-sign-up'),
     })
     .registerSetting({
+      setting: 'blomstra-web3.signup-with-email',
+      type: 'switch',
+      label: app.translator.trans('blomstra-web3.admin.settings.signup-with-email'),
+    })
+    .registerSetting({
+      setting: 'blomstra-web3.no-email-signup-message',
+      type: 'text',
+      label: app.translator.trans('blomstra-web3.admin.settings.no-email-signup-message'),
+    })
+    .registerSetting({
       setting: 'blomstra-web3.infura-project-id',
       type: 'text',
       label: app.translator.trans('blomstra-web3.admin.settings.infura-project-id'),

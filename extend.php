@@ -14,6 +14,8 @@ namespace Blomstra\Web3;
 use Blomstra\Web3\Exception\InvalidSignatureException;
 use Blomstra\Web3\Query\Web3AccountFilterer;
 use Fig\Http\Message\StatusCodeInterface;
+use Flarum\Api\Serializer\CurrentUserSerializer;
+use Flarum\Api\Serializer\ForumSerializer;
 use Flarum\Extend;
 use Flarum\Frontend\Document;
 
@@ -53,9 +55,18 @@ return [
     (new Extend\ErrorHandling())
         ->status('invalid_crypto_signature', StatusCodeInterface::STATUS_UNAUTHORIZED),
 
+    (new Extend\ApiSerializer(CurrentUserSerializer::class))
+        ->attribute('isEmailFake', function (CurrentUserSerializer $serializer, $user): bool {
+            return str_contains($user->email, '@users.noreply');
+        }),
+
     (new Extend\Settings())
         ->default('blomstra-web3.allow-sign-up', 1)
+        ->default('blomstra-web3.signup-with-email', 1)
+        ->default('blomstra-web3.no-email-signup-message', '')
         ->serializeToForum('blomstra-web3.allow-sign-up', 'blomstra-web3.allow-sign-up', 'boolval')
+        ->serializeToForum('blomstra-web3.signup-with-email', 'blomstra-web3.signup-with-email', 'boolval')
         ->serializeToForum('blomstra-web3.prioritize-web3-auth-modals', 'blomstra-web3.prioritize-web3-auth-modals', 'boolval')
-        ->serializeToForum('blomstra-web3.infura-project-id', 'blomstra-web3.infura-project-id'),
+        ->serializeToForum('blomstra-web3.infura-project-id', 'blomstra-web3.infura-project-id')
+        ->serializeToForum('blomstra-web3.no-email-signup-message', 'blomstra-web3.no-email-signup-message'),
 ];

@@ -2,15 +2,21 @@ blomstra-web3:
   admin:
     settings:
       allow-sign-up: Allow Signup with web3
+      ffi-disabled: >
+        The PHP FFI extension is not enabled. Dotsama wallets will not work.
       infura-project-id: Infura Project ID
       infura-project-id-help: >
         Your Infura Project ID. You can get one from https://infura.io
         Needed for the following wallets: Coinbase, WalletConnect.
       prioritize-web3-auth-modals: Open web3 Login/Signup by default
-      ffi-disabled: >
-        The PHP FFI extension is not enabled. Dotsama wallets will not work.
+      signup-with-email: Signup with Email
+      no-email-signup-message: >
+        Message to show for users who didn't sign up with an email address (leave blank to disable).
 
   forum:
+    alerts:
+      no-email-signup:
+        link: HERE
     connect-wallet-modal:
       could-not-sign: Could not sign username cryptographically on selected account.
       title: Connect Wallet
