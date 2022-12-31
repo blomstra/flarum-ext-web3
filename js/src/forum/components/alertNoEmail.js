@@ -9,7 +9,7 @@ export default function alertNoEmail(app) {
   const user = app.session.user;
   let message = app.forum.attribute('blomstra-web3.no-email-signup-message');
 
-  if (!message || !user || user.isEmailFake()) return;
+  if (!message || !user || !user.isEmailFake()) return;
 
   class ContainedAlert extends Alert {
     view(vnode) {
