@@ -1,10 +1,9 @@
 import app from 'flarum/forum/app';
-import Modal from 'flarum/common/components/Modal';
 import ItemList from 'flarum/common/utils/ItemList';
 import Button from 'flarum/common/components/Button';
 import icon from 'flarum/common/helpers/icon';
 import Link from 'flarum/common/components/Link';
-import { ComponentAttrs } from 'flarum/common/Component';
+import Component, { ComponentAttrs } from 'flarum/common/Component';
 import LoadingIndicator from 'flarum/common/components/LoadingIndicator';
 import WalletAccounts from './WalletAccounts';
 import type { IConnectWalletModalAttrs } from './ConnectWalletModal';
@@ -21,12 +20,8 @@ export interface IPolkadotConnectWalletModalAttrs extends IConnectWalletModalAtt
 
 export default class PolkadotConnectWalletModal<
   CustomAttrs extends IPolkadotConnectWalletModalAttrs = IPolkadotConnectWalletModalAttrs
-> extends Modal<CustomAttrs> {
+> extends Component<CustomAttrs> {
   private selectedWallet: Wallet | null = null;
-
-  oninit(vnode: Mithril.Vnode<CustomAttrs, this>) {
-    super.oninit(vnode);
-  }
 
   className() {
     return 'PolkadotConnectWalletModal';
@@ -36,17 +31,13 @@ export default class PolkadotConnectWalletModal<
     return app.translator.trans('blomstra-web3.forum.polkadot-connect-wallet-modal.title');
   }
 
-  content() {
+  view() {
     if (!app.web3.loaded) {
       app.web3.load().then(() => m.redraw());
       return <LoadingIndicator />;
     }
 
-    return (
-      <div className="Modal-body">
-        <div className="Form">{this.selectedWallet ? this.selectedWalletView() : this.walletSelectionView()}</div>
-      </div>
-    );
+    return <div className="Form">{this.selectedWallet ? this.selectedWalletView() : this.walletSelectionView()}</div>;
   }
 
   walletSelectionView() {
@@ -71,9 +62,9 @@ export default class PolkadotConnectWalletModal<
 
   walletKindView(walletKind: WalletKind, index: number = 0) {
     return (
-      <div className="PolkadotConnectWalletModal-walletKind" key={index}>
-        <div className="PolkadotConnectWalletModal-walletKind-title">{walletKind.title}</div>
-        <div className="PolkadotConnectWalletModal-walletKind-list">
+      <div className="ConnectWalletModal-walletKind" key={index}>
+        <div className="ConnectWalletModal-walletKind-title">{walletKind.title}</div>
+        <div className="ConnectWalletModal-walletKind-list">
           {walletKind.wallets.map((wallet, walletIndex) => this.walletView(wallet, walletIndex))}
         </div>
       </div>

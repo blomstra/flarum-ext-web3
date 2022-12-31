@@ -1,5 +1,4 @@
 import app from 'flarum/forum/app';
-import Modal from 'flarum/common/components/Modal';
 import Button from 'flarum/common/components/Button';
 import LoadingIndicator from 'flarum/common/components/LoadingIndicator';
 import { IConnectWalletModalAttrs } from './ConnectWalletModal';
@@ -7,6 +6,7 @@ import Web3Account from '../models/Web3Account';
 import getProvider from '../utils/getProvider';
 import type Core from 'web3modal';
 import type Mithril from 'mithril';
+import Component from 'flarum/common/Component';
 
 // import { W3mModal, W3mConnectButton } from '@web3modal/ui';
 // import { ClientCtrl, ConfigCtrl, ConfigOptions } from '@web3modal/core';
@@ -39,9 +39,13 @@ import type Mithril from 'mithril';
 //   }
 // }
 
-export interface IEvmConnectWalletModalAttrs extends IConnectWalletModalAttrs {}
+export interface IEvmConnectWalletModalAttrs extends IConnectWalletModalAttrs {
+  onerror: Function;
+}
 
-export default class EvmConnectWalletModal<CustomAttrs extends IEvmConnectWalletModalAttrs = IEvmConnectWalletModalAttrs> extends Modal<CustomAttrs> {
+export default class EvmConnectWalletModal<
+  CustomAttrs extends IEvmConnectWalletModalAttrs = IEvmConnectWalletModalAttrs
+> extends Component<CustomAttrs> {
   private web3Modal!: Core;
   private provider?: any;
   private __providerName?: string;
@@ -61,7 +65,7 @@ export default class EvmConnectWalletModal<CustomAttrs extends IEvmConnectWallet
     return app.translator.trans('blomstra-web3.forum.evm-connect-wallet-modal.title');
   }
 
-  content() {
+  view() {
     if (!this.currentAddress) {
       this.getProvider()
         .then(async (provider) => {
@@ -79,7 +83,8 @@ export default class EvmConnectWalletModal<CustomAttrs extends IEvmConnectWallet
     }
 
     return (
-      <div className="Modal-body">
+      <div className="ConnectWalletModal-walletKind">
+        <div className="ConnectWalletModal-walletKind-title">EVM</div>
         <div className="Form-group">
           <label>{this.currentAddress}</label>
           {app.web3accounts.exists(this.currentAddress) ? (
@@ -127,7 +132,7 @@ export default class EvmConnectWalletModal<CustomAttrs extends IEvmConnectWallet
             type,
           },
           {
-            errorHandler: this.onerror.bind(this),
+            errorHandler: this.attrs.onerror.bind(this),
             meta: {
               signature,
             },
@@ -142,7 +147,6 @@ export default class EvmConnectWalletModal<CustomAttrs extends IEvmConnectWallet
       app.alerts.show({ type: 'error' }, app.translator.trans('blomstra-web3.forum.connect-wallet-modal.could-not-sign'));
     }
 
-    this.loading = false;
     m.redraw();
   }
 

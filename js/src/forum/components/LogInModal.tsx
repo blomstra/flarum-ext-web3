@@ -27,7 +27,7 @@ export default class LogInModal extends BaseLogInModal {
 
     items.setContent(
       'submit',
-      <Button className="Button Button--block Button--primary" type="submit" disabled={!this.identification()}>
+      <Button className="Button Button--block Button--primary" type="submit" disabled={!this.identification()} loading={this.loading}>
         {app.translator.trans('blomstra-web3.forum.log-in.select-wallet-account', {
           rightArrow: icon('fas fa-arrow-right'),
         })}
@@ -57,6 +57,8 @@ export default class LogInModal extends BaseLogInModal {
     e.preventDefault();
     e.stopPropagation();
 
+    this.loading = true;
+
     app.modal.show(
       ConnectWalletModal,
       {
@@ -76,10 +78,7 @@ export default class LogInModal extends BaseLogInModal {
               },
               errorHandler: this.onerror.bind(this),
             })
-            .then(() => {
-              app.modal.close();
-              window.location.reload();
-            });
+            .then(() => window.location.reload(), this.loaded.bind(this));
         },
       },
       true

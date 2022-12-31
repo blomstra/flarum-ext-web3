@@ -12,13 +12,12 @@ blomstra-web3:
       signup-with-email: Signup with Email
       no-email-signup-message: >
         Message to show for users who didn't sign up with an email address (leave blank to disable).
+      no-email-signup-message-help: "Use [link]text[/link] to link to email edit page."
 
   forum:
-    alerts:
-      no-email-signup:
-        link: HERE
     connect-wallet-modal:
       could-not-sign: Could not sign username cryptographically on selected account.
+      goback: Back
       title: Connect Wallet
       polkadot-wallets: => blomstra-web3.ref.polkadot-wallets
       evm-wallets: EVM Wallets

@@ -38,6 +38,7 @@ app.initializers.add('blomstra/web3', () => {
       setting: 'blomstra-web3.no-email-signup-message',
       type: 'text',
       label: app.translator.trans('blomstra-web3.admin.settings.no-email-signup-message'),
+      help: app.translator.trans('blomstra-web3.admin.settings.no-email-signup-message-help'),
     })
     .registerSetting({
       setting: 'blomstra-web3.infura-project-id',

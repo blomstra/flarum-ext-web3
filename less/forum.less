@@ -1,5 +1,5 @@
 @import "components/AttachedAccounts";
-@import "components/PolkadotConnectWalletModal";
+@import "components/ConnectWalletModal";
 @import "components/WalletAccounts";
 
 .web3modal-modal-lightbox {
@@ -14,4 +14,11 @@
   --button-bg-hover: darken(@web3Color, 10%);
   --button-bg-active: darken(@web3Color, 20%);
   --button-bg-disabled: darken(@web3Color, 20%);
+}
+
+.Alert--emailFake {
+  .Button--link {
+    font-weight: bold;
+    vertical-align: baseline;
+  }
 }

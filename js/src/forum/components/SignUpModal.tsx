@@ -33,7 +33,12 @@ export default class SignUpModal extends BaseSignUpModal {
 
     items.setContent(
       'submit',
-      <Button className="Button Button--block Button--primary" type="submit" disabled={!this.username() || (!this.email() && signUpWithEmail)}>
+      <Button
+        className="Button Button--block Button--primary"
+        type="submit"
+        disabled={!this.username() || (!this.email() && signUpWithEmail)}
+        loading={this.loading}
+      >
         {app.translator.trans('blomstra-web3.forum.sign-up.select-wallet-account', {
           rightArrow: icon('fas fa-arrow-right'),
         })}
@@ -63,6 +68,8 @@ export default class SignUpModal extends BaseSignUpModal {
     e.preventDefault();
     e.stopPropagation();
 
+    this.loading = true;
+
     app.modal.show(
       ConnectWalletModal,
       {
@@ -84,10 +91,7 @@ export default class SignUpModal extends BaseSignUpModal {
               },
               errorHandler: this.onerror.bind(this),
             })
-            .then(() => {
-              app.modal.close();
-              window.location.reload();
-            });
+            .then(() => window.location.reload(), this.loaded.bind(this));
         },
       },
       true

@@ -14,7 +14,6 @@ import HeaderSecondary from 'flarum/forum/components/HeaderSecondary';
 import Button from 'flarum/common/components/Button';
 import Web3ModulesState from './states/Web3ModulesState';
 import alertNoEmail from './components/alertNoEmail';
-import IndexPage from 'flarum/forum/components/IndexPage';
 import User from 'flarum/common/models/User';
 import Model from 'flarum/common/Model';
 
@@ -27,9 +26,11 @@ app.initializers.add('blomstra/web3', () => {
   // @ts-ignore
   User.prototype.isEmailFake = Model.attribute<boolean>('isEmailFake');
 
+  let alertMounted = false;
   extend(HeaderSecondary.prototype, 'oncreate', () => {
-    if (app.session.user) {
+    if (!alertMounted) {
       alertNoEmail(app);
+      alertMounted = true;
     }
   });
 

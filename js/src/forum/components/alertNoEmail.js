@@ -7,7 +7,7 @@ import Button from 'flarum/common/components/Button';
  */
 export default function alertNoEmail(app) {
   const user = app.session.user;
-  const message = app.forum.attribute('blomstra-web3.no-email-signup-message');
+  let message = app.forum.attribute('blomstra-web3.no-email-signup-message');
 
   if (!message || !user || user.isEmailFake()) return;
 
@@ -18,15 +18,22 @@ export default function alertNoEmail(app) {
     }
   }
 
-  const control = (
-    <Button class="Button Button--link" onclick={() => app.modal.show(ChangeEmailModal)}>
-      {app.translator.trans('blomstra-web3.forum.alerts.no-email-signup.link')}
+  const control = (label) => (
+    <Button class="Button Button--text Button--link" onclick={() => app.modal.show(ChangeEmailModal)}>
+      {label}
     </Button>
   );
 
+  // Extract the label from the message from [link][/link] tags.
+  const label = message.match(/\[link](.*?)\[\/link]/)[1];
+  // Split the message into two parts, before and after the link.
+  const parts = message.split(`[link]${label}[/link]`);
+  // Replace the link with a button.
+  message = [parts[0], control(label), parts[1]];
+
   m.mount($('<div class="App-notices"/>').insertBefore('#content')[0], {
     view: () => (
-      <ContainedAlert dismissible={false} controls={[control]} className="Alert--emailFake">
+      <ContainedAlert dismissible={false} className="Alert--emailFake">
         {message}
       </ContainedAlert>
     ),
