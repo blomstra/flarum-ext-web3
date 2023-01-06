@@ -1,6 +1,6 @@
 import Alert from 'flarum/common/components/Alert';
-import ChangeEmailModal from 'flarum/forum/components/ChangeEmailModal';
 import Button from 'flarum/common/components/Button';
+import ChangeEmailModal from './ChangeEmailModal';
 
 /**
  * Shows an alert if the user signed up with no email address.

@@ -39,9 +39,7 @@ import Component from 'flarum/common/Component';
 //   }
 // }
 
-export interface IEvmConnectWalletModalAttrs extends IConnectWalletModalAttrs {
-  onerror: Function;
-}
+export interface IEvmConnectWalletModalAttrs extends IConnectWalletModalAttrs {}
 
 export default class EvmConnectWalletModal<
   CustomAttrs extends IEvmConnectWalletModalAttrs = IEvmConnectWalletModalAttrs
@@ -143,8 +141,9 @@ export default class EvmConnectWalletModal<
       }
 
       if (this.attrs.onattach) this.attrs.onattach(this.currentAddress!, signature, source, type);
-    } catch (e) {
+    } catch (error: any) {
       app.alerts.show({ type: 'error' }, app.translator.trans('blomstra-web3.forum.connect-wallet-modal.could-not-sign'));
+      app.alerts.show({ type: 'error' }, error.message);
     }
 
     m.redraw();

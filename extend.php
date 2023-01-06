@@ -11,11 +11,8 @@
 
 namespace Blomstra\Web3;
 
-use Blomstra\Web3\Exception\InvalidSignatureException;
-use Blomstra\Web3\Query\Web3AccountFilterer;
 use Fig\Http\Message\StatusCodeInterface;
 use Flarum\Api\Serializer\CurrentUserSerializer;
-use Flarum\Api\Serializer\ForumSerializer;
 use Flarum\Extend;
 use Flarum\Frontend\Document;
 
@@ -40,7 +37,8 @@ return [
         ->get('/web3/accounts', 'web3-accounts.index', Api\Controller\ListWeb3AccountsController::class)
         ->post('/web3/accounts', 'web3-accounts.create', Api\Controller\CreateWeb3AccountController::class)
         ->delete('/web3/accounts/{id}', 'web3-accounts.delete', Api\Controller\DeleteWeb3AccountController::class)
-        ->post('/web3/token', 'web3-accounts.token', Api\Controller\CreateTokenWithWeb3Account::class),
+        ->post('/web3/token', 'web3-accounts.token', Api\Controller\CreateTokenWithWeb3Account::class)
+        ->put('/web3/set-email', 'web3.set-email', Api\Controller\SetUserEmailController::class),
 
     (new Extend\Routes('forum'))
         ->post('/web3/login', 'web3-accounts.login', Forum\Controller\LoginWithWeb3AccountController::class)

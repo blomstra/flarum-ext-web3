@@ -7,7 +7,7 @@
   &-account {
     --icon-size: 32px;
     display: grid;
-    grid-template-columns: var(--icon-size) 1fr 1fr;
+    grid-template-columns: var(--icon-size) 3fr 1fr;
     align-items: center;
     grid-gap: 16px;
     padding: 8px;
@@ -30,6 +30,12 @@
 
     &-address {
       font-weight: bold;
+      text-overflow: ellipsis;
+      overflow: hidden;
+    }
+
+    &-content {
+      overflow: hidden;
     }
 
     &-wallet {

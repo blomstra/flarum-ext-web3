@@ -137,8 +137,9 @@ export default class WalletAccounts<CustomAttrs extends IWalletAccountsAttrs = I
         }
 
         if (this.attrs.onattach) this.attrs.onattach(hexAddress, signature, source, type);
-      } catch (err) {
+      } catch (error: any) {
         app.alerts.show({ type: 'error' }, app.translator.trans('blomstra-web3.forum.connect-wallet-modal.could-not-sign'));
+        app.alerts.show({ type: 'error' }, error.message);
       }
 
       this.loading = false;

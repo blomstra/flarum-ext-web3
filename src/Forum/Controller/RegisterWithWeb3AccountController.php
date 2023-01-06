@@ -81,14 +81,6 @@ class RegisterWithWeb3AccountController implements RequestHandlerInterface
                 ])
                 ->post('/users');
 
-            // Manually confirm the email if it was auto-generated.
-            if (! $signUpWithEmail) {
-                /** @var User $user */
-                $user = User::query()->where('email', $data['email'])->first();
-                $user->is_email_confirmed = true;
-                $user->save();
-            }
-
             // Reset `allow_sign_up`
             $this->settings->set('allow_sign_up', $initialAllowSignUpValue);
 
@@ -96,6 +88,12 @@ class RegisterWithWeb3AccountController implements RequestHandlerInterface
 
             if (isset($body->data)) {
                 $actor = User::find($body->data->id);
+
+                // Manually confirm the email if it was auto-generated.
+                if (! $signUpWithEmail) {
+                    $actor->is_email_confirmed = true;
+                    $actor->save();
+                }
 
                 // Create web3 account.
                 // This will check if the signature is valid.

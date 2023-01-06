@@ -91,8 +91,10 @@ export default class SignUpModal extends BaseSignUpModal {
               },
               errorHandler: this.onerror.bind(this),
             })
-            .then(() => window.location.reload(), this.loaded.bind(this));
+            .then(() => window.location.reload(), this.loaded.bind(this))
+            .finally(() => (this.loading = false));
         },
+        onclose: () => (this.loading = false),
       },
       true
     );

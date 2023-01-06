@@ -8,6 +8,7 @@ import EvmConnectWalletModal from './EvmConnectWalletModal';
 export interface IConnectWalletModalAttrs extends IInternalModalAttrs {
   username: string;
   onattach?: (address: string, signature: string, source: string, type: string) => void;
+  onclose: Function;
 }
 
 type WalletTypeName = 'evm' | 'polkadot';
@@ -19,6 +20,11 @@ const nameToComponent: Record<WalletTypeName, ComponentClass> = {
 
 export default class ConnectWalletModal<CustomAttrs extends IConnectWalletModalAttrs = IConnectWalletModalAttrs> extends Modal<CustomAttrs> {
   private current: WalletTypeName | null = null;
+
+  hide() {
+    this.attrs.onclose();
+    super.hide();
+  }
 
   className(): string {
     return 'ConnectWalletModal';
@@ -43,7 +49,7 @@ export default class ConnectWalletModal<CustomAttrs extends IConnectWalletModalA
               {app.translator.trans('blomstra-web3.forum.connect-wallet-modal.goback')}
             </Button>
           </div>
-          <ComponentName onerror={this.onerror} {...this.attrs} key={this.current} />
+          <ComponentName onerror={this.onerror.bind(this)} {...this.attrs} key={this.current} />
         </div>
       );
     }
